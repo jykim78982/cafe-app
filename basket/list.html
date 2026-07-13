@@ -69,7 +69,20 @@
 
       <div class="payment-method">
         <span class="payment-method-label">결제 수단</span>
-        <span class="payment-method-value">모의 카드 (**** 1234)</span>
+        <div class="payment-options" id="paymentOptions">
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="카드" checked>
+            <span>카드</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="네이버페이">
+            <span>네이버페이</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="카카오페이">
+            <span>카카오페이</span>
+          </label>
+        </div>
       </div>
 
       <div class="payment-actions" id="paymentActions">

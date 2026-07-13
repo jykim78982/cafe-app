@@ -107,6 +107,11 @@
     return "o_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   }
 
+  function getSelectedPaymentMethod() {
+    var checked = document.querySelector('input[name="paymentMethod"]:checked');
+    return checked ? checked.value : "카드";
+  }
+
   function createOrder(cart) {
     var raw = localStorage.getItem(ORDERS_KEY);
     var orders = [];
@@ -122,6 +127,7 @@
       status: "pending",
       createdAt: new Date().toISOString(),
       total: CafeUtils.getCartTotal(),
+      paymentMethod: getSelectedPaymentMethod(),
       items: cart.map(function (item) {
         return { name: item.name, price: item.price, qty: item.qty };
       })
