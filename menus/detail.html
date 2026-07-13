@@ -28,6 +28,17 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+  <div class="modal-overlay" id="cartModal" hidden>
+    <div class="modal glass">
+      <h3>장바구니에 담았습니다</h3>
+      <p class="modal-desc" id="cartModalDesc"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="modalContinueBtn">쇼핑 계속하기</button>
+        <a class="btn btn-primary" href="../basket/list.html">장바구니 보기</a>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/data.js"></script>
   <script src="../js/utils.js"></script>
   <script src="detail.js"></script>

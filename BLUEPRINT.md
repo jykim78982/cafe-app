@@ -201,10 +201,10 @@ cafe-app/
 - [x] `menus/list.html/css/js` — 메뉴 카드에 바로 담기 버튼 + 바로 주문 버튼 추가
 - [x] `menus/list.css` — 목록보기 모드에서도 그리드보기와 동일하게 카드 호버 확대 효과 적용
 
-### 11단계: 고객 - 메뉴 상세 페이지 리디자인 (audio-shop 참고)
+### 11단계: 고객 - 메뉴 상세 페이지 리디자인 (audio-shop 참고) ✅
 
-- [ ] `menus/detail.html/css/js` — 이미지+정보 2단 레이아웃으로 리디자인 (기존 헤더 내비게이션 스타일은 유지)
-- [ ] `menus/detail.html/css/js` — 담기 완료 모달, 바로 주문 버튼 추가
+- [x] `menus/detail.html/css/js` — 이미지+정보 2단 레이아웃으로 리디자인 (기존 헤더 내비게이션 스타일은 유지)
+- [x] `menus/detail.html/css/js` — 담기 완료 모달, 바로 주문 버튼 추가
 
 ### 12단계: 고객 - 결제 수단 선택 (audio-shop 참고)
 

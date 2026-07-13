@@ -196,6 +196,56 @@ h1 {
   font-size: 1.2rem;
 }
 
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.order-actions .btn {
+  flex: 1;
+  min-height: 46px;
+}
+
+/* ===== 담기 완료 모달 ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(26, 26, 24, 0.5);
+  padding: var(--spacing);
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  width: 100%;
+  max-width: 360px;
+  padding: var(--spacing-lg);
+}
+
+.modal h3 {
+  margin: 0 0 8px;
+}
+
+.modal-desc {
+  margin: 0 0 var(--spacing-lg);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
 .empty-state {
   display: grid;
   justify-items: center;
