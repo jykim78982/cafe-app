@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지 | Cafe App</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">CAFE APP</a>
+      <nav class="nav-links" aria-label="고객 메뉴">
+        <a href="../menus/list.html">MENU</a>
+        <a href="../basket/list.html">BASKET <span id="cartCount">0</span></a>
+        <a href="../orders/list.html">ORDERS</a>
+        <a href="index.html" aria-current="page">MY PAGE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-main">
+    <section class="hero glass">
+      <div>
+        <p class="eyebrow">My Page</p>
+        <h1>마이페이지</h1>
+        <p>장바구니와 주문 현황을 한눈에 확인하고, 필요한 곳으로 빠르게 이동하세요.</p>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="내 현황 요약">
+      <article class="summary-card glass">
+        <span>장바구니</span>
+        <strong id="cartSummary">0개</strong>
+      </article>
+      <article class="summary-card glass">
+        <span>전체 주문</span>
+        <strong id="totalOrders">0</strong>
+      </article>
+      <article class="summary-card glass">
+        <span>진행 중인 주문</span>
+        <strong id="activeOrders">0</strong>
+      </article>
+    </section>
+
+    <section class="quick-links" aria-label="바로가기">
+      <a class="quick-link glass" href="../menus/list.html">
+        <span class="quick-title">메뉴 보러가기</span>
+        <span class="quick-desc">오늘의 커피와 디저트를 둘러보세요</span>
+      </a>
+      <a class="quick-link glass" href="../basket/list.html">
+        <span class="quick-title">장바구니</span>
+        <span class="quick-desc">담아둔 메뉴를 확인하고 주문하세요</span>
+      </a>
+      <a class="quick-link glass" href="../orders/list.html">
+        <span class="quick-title">주문내역 전체보기</span>
+        <span class="quick-desc">지난 주문과 진행 상태를 확인하세요</span>
+      </a>
+    </section>
+
+    <section class="recent-section" aria-label="최근 주문">
+      <div class="section-heading">
+        <h2>최근 주문</h2>
+        <a class="see-all" href="../orders/list.html">전체 보기</a>
+      </div>
+      <div class="recent-list" id="recentList"></div>
+      <p class="empty-state glass" id="emptyState" hidden>아직 주문 내역이 없습니다. <a href="../menus/list.html">첫 주문하러 가기</a></p>
+    </section>
+  </main>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

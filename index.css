@@ -1,0 +1,227 @@
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing);
+  min-height: 68px;
+}
+
+.brand {
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.nav-links a {
+  position: relative;
+  padding: 4px 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.nav-links a:hover {
+  color: var(--color-primary);
+}
+
+.nav-links span {
+  display: inline-block;
+  margin-left: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 1px 7px;
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* 풀블리드 히어로 — 실제 커피 추출 영상 배경(Pexels, video ID 25311041). 영상 로드 전/실패 시엔 ::before 그라디언트가 대신 보임 */
+.hero-photo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 84vh;
+  overflow: hidden;
+  background: #3a2415;
+}
+
+.hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(20, 12, 6, 0.55), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 30% 20%, #d8b48a, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 75% 80%, #7a5636, transparent 60%),
+    linear-gradient(160deg, #e7cba3, #a97c50 45%, #4a3020 100%);
+  animation: heroDrift 16s ease-in-out infinite alternate;
+}
+
+.hero-video {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-scrim {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.15) 45%, rgba(0, 0, 0, 0.5));
+}
+
+@keyframes heroDrift {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-2%, -3%);
+  }
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.hero-overlay p {
+  margin: 0;
+  color: #fff;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+}
+
+.page-main {
+  padding-bottom: 80px;
+}
+
+.choice-section {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 72px;
+  text-align: center;
+}
+
+.section-eyebrow {
+  margin: 0 0 12px;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin: 0 0 48px;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.choice-row {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  padding: 32px 0;
+  border-top: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.choice-row:last-of-type {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.choice-index {
+  flex-shrink: 0;
+  width: 48px;
+  color: var(--color-border);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.choice-body h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.choice-body p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.hero-cta {
+  display: inline-flex;
+  margin-top: 48px;
+  padding: 15px 36px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo::before {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 0;
+    min-height: 0;
+  }
+
+  .nav-links {
+    gap: 18px;
+  }
+
+  .hero-photo {
+    min-height: 64vh;
+  }
+
+  .hero-overlay p {
+    font-size: 1.4rem;
+  }
+
+  .choice-section {
+    padding-top: 48px;
+  }
+
+  .choice-row {
+    gap: 16px;
+  }
+}

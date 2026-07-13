@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>메뉴 등록 - 카페 관리자</title>
+<link rel="stylesheet" href="../../css/variables.css">
+<link rel="stylesheet" href="create.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header-inner">
+      <a class="logo" href="../index.html">카페 관리자</a>
+      <nav class="admin-nav" aria-label="관리자 메뉴">
+        <a href="../index.html">대시보드</a>
+        <a href="list.html" aria-current="page">메뉴 관리</a>
+        <a href="../orders/list.html">주문 관리</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container page">
+    <a class="back-link" href="list.html">목록으로</a>
+    <h1>메뉴 등록</h1>
+    <form id="create-form" class="glass form-card">
+      <div class="form-group">
+        <label for="name">메뉴명</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="category">카테고리</label>
+        <select id="category">
+          <option value="커피">커피</option>
+          <option value="음료">음료</option>
+          <option value="디저트">디저트</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="price">가격 (원)</label>
+        <input type="number" id="price" min="0" step="100" required>
+      </div>
+      <div class="form-group">
+        <label for="description">설명</label>
+        <textarea id="description" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="image">메뉴 사진</label>
+        <input type="file" id="image" accept="image/*">
+        <p class="form-help">선택한 파일은 <code>images/menus/파일명</code> 경로로 저장됩니다.</p>
+        <div class="image-preview" id="image-preview">이미지 없음</div>
+      </div>
+      <div id="form-error" class="form-error" style="display:none;"></div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">등록</button>
+        <a href="list.html" class="btn btn-outline">취소</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="../../js/data.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="create.js"></script>
+</body>
+</html>
