@@ -361,6 +361,10 @@
   margin-top: var(--spacing-lg);
 }
 
+.payment-actions[hidden] {
+  display: none;
+}
+
 .payment-processing {
   display: flex;
   align-items: center;
