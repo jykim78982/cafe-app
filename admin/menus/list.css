@@ -75,11 +75,47 @@
   margin: 10px 0 0;
 }
 
+.list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
 .tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: var(--spacing-lg);
   flex-wrap: wrap;
+}
+
+.view-toggle {
+  display: flex;
+  flex: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.view-btn {
+  min-width: 72px;
+  min-height: 36px;
+  border: none;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-weight: 800;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.view-btn + .view-btn {
+  border-left: 1px solid var(--color-border);
+}
+
+.view-btn[aria-pressed="true"] {
+  background: var(--color-primary);
+  color: #fff;
 }
 
 .tab {
@@ -105,10 +141,58 @@
 
 .menu-card {
   padding: var(--spacing);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.menu-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glass);
+  transform: translateY(-2px);
 }
 
 .menu-card.is-soldout {
   opacity: 0.55;
+}
+
+/* ===== 목록 보기 ===== */
+.menu-grid.is-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-grid.is-list .menu-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+}
+
+.menu-grid.is-list .thumb {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0;
+}
+
+.menu-grid.is-list .name {
+  min-width: 160px;
+}
+
+.menu-grid.is-list .category {
+  min-width: 90px;
+}
+
+.menu-grid.is-list .price {
+  min-width: 90px;
+  margin-top: 0;
+}
+
+.menu-grid.is-list .actions {
+  margin-top: 0;
+  margin-left: auto;
+  flex-wrap: nowrap;
 }
 
 .menu-card .thumb {

@@ -29,7 +29,13 @@
       </div>
       <a href="create.html" class="btn btn-accent">+ 새 메뉴 등록</a>
     </section>
-    <div id="tabs" class="tabs"></div>
+    <div class="list-toolbar">
+      <div id="tabs" class="tabs"></div>
+      <div class="view-toggle" role="group" aria-label="보기 방식">
+        <button type="button" id="gridViewBtn" class="view-btn" aria-pressed="true">그리드</button>
+        <button type="button" id="listViewBtn" class="view-btn" aria-pressed="false">목록</button>
+      </div>
+    </div>
     <div id="menu-list" class="menu-grid"></div>
     <p id="empty-msg" class="empty-msg" style="display:none;">등록된 메뉴가 없습니다. "새 메뉴 등록"으로 추가해보세요.</p>
   </main>

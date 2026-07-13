@@ -210,11 +210,11 @@ cafe-app/
 
 - [x] `basket/list.html/css/js` — 결제 시 결제 수단 선택 UI 추가 (카드 / 간편결제: 네이버페이, 카카오페이)
 
-### 13단계: 관리자 - 메뉴/주문 관리 UX 개선 (audio-shop 참고)
+### 13단계: 관리자 - 메뉴/주문 관리 UX 개선 (audio-shop 참고) ✅
 
-- [ ] `admin/menus/list.html/css/js` — 그리드보기/목록보기 전환 버튼 추가
-- [ ] `admin/menus/list.css`, `admin/orders/list.css` — 행/카드에 커서를 올렸을 때 테두리 강조 효과 추가
-- [ ] `admin/menus/list.js`, `admin/orders/list.js` — 행/카드 클릭 시 상세 페이지로 이동 (버튼·링크 클릭은 제외)
+- [x] `admin/menus/list.html/css/js` — 그리드보기/목록보기 전환 버튼 추가
+- [x] `admin/menus/list.css`, `admin/orders/list.css` — 행/카드에 커서를 올렸을 때 테두리 강조 효과 추가
+- [x] `admin/menus/list.js`, `admin/orders/list.js` — 행/카드 클릭 시 상세 페이지로 이동 (버튼·링크 클릭은 제외)
 
 ### 14단계: 공통 - 레이아웃 점검 (audio-shop 참고)
 
