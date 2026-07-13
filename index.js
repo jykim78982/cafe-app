@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+
   CafeData.init();
 
   document.getElementById("cartCount").textContent = CafeUtils.getCartCount();

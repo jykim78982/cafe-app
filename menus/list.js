@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+
   var state = {
     search: "",
     category: "전체",

@@ -1,5 +1,8 @@
 (function () {
   "use strict";
+
+  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!CafeUtils.requireAdmin()) return;
   CafeData.init();
 
   var activeCategory = "전체";

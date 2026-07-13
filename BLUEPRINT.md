@@ -50,9 +50,6 @@ cafe-app/
 │
 ├── 🔴 관리자/사장
 │   └── admin/
-│       ├── login.html                # 관리자 로그인 (audio-shop 참고)
-│       ├── login.css
-│       ├── login.js
 │       ├── index.html                # 대시보드
 │       ├── index.css
 │       ├── index.js
@@ -92,14 +89,15 @@ cafe-app/
 | 역할 | 경로 | 주요 기능 |
 |------|------|-----------|
 | **고객** | `/`, `/auth/`, `/menus/`, `/my/`, `/basket/`, `/orders/` | 메인, 로그인/회원가입, 메뉴 조회, 마이페이지, 장바구니, 주문 내역 |
-| **관리자/사장** | `/admin/login`, `/admin/`, `/admin/menus/`, `/admin/orders/` | 관리자 로그인, 대시보드, 메뉴 CRUD, 주문 관리 |
+| **관리자/사장** | `/admin/`, `/admin/menus/`, `/admin/orders/` | 대시보드, 메뉴 CRUD, 주문 관리 (로그인은 고객과 같은 `/auth/login` 사용) |
 
 ## 🔑 로그인 (audio-shop 참고)
 
 - **저장 방식**: 별도 백엔드 없이 localStorage 기반 인증 (`cafeapp_users`, `cafeapp_session`, `cafeapp_admin`, `cafeapp_admin_session`).
-- **고객**: `auth/signup`에서 회원가입(이메일/비밀번호/이름) → `auth/login`에서 로그인 → `cafeapp_session`에 로그인 정보 저장.
-- **관리자**: `admin/login`에서 로그인 → `cafeapp_admin_session`에 저장. 관리자 계정은 시드 데이터로 미리 하나 심어둠(예: `admin@cafe.com` / `admin1234`).
-- **접근 제어**: `my/`, `admin/`(로그인 페이지 제외) 등 로그인이 필요한 페이지는 세션이 없으면 각각 `auth/login`, `admin/login`으로 리다이렉트.
+- **로그인 페이지는 고객/관리자 공용**: `auth/login`에서 이메일·비밀번호를 입력하면 먼저 일반 회원으로 로그인 시도 → 실패하면 관리자로 로그인 시도. 성공한 쪽에 맞는 곳(고객은 `my/`, 관리자는 `admin/`)으로 이동.
+- **고객**: `auth/signup`에서 회원가입(이메일/비밀번호/이름) → `cafeapp_session`에 로그인 정보 저장.
+- **관리자**: 회원가입 없이 시드 데이터로 계정 하나를 미리 심어둠(예: `admin@cafe.com` / `admin1234`) → 로그인 성공 시 `cafeapp_admin_session`에 저장.
+- **접근 제어**: `my/`, `admin/`(대시보드 이하 전체) 등 로그인이 필요한 페이지는 세션이 없으면 `auth/login`으로 리다이렉트.
 - **로그아웃**: 헤더 내비게이션에 로그아웃 버튼 추가, 클릭 시 세션 키 삭제 후 메인으로 이동.
 
 ## 🎨 디자인
@@ -189,14 +187,13 @@ cafe-app/
 - [x] `admin/orders/detail.css`
 - [x] `admin/orders/detail.js`
 
-### 9단계: 고객/관리자 - 로그인 (audio-shop 참고)
+### 9단계: 고객/관리자 - 로그인 (audio-shop 참고) ✅
 
-- [ ] `js/utils.js` — `cafeapp_users`, `cafeapp_session`, `cafeapp_admin`, `cafeapp_admin_session` 키와 인증 관련 헬퍼 함수 추가
-- [ ] `auth/login.html/css/js` — 고객 로그인
-- [ ] `auth/signup.html/css/js` — 고객 회원가입
-- [ ] `admin/login.html/css/js` — 관리자 로그인 (관리자 시드 계정 하나 포함)
-- [ ] `my/index.js`, `admin/index.js` 등 — 로그인 필요한 페이지에 세션 체크 및 리다이렉트 적용
-- [ ] 헤더 내비게이션에 로그인 상태에 따른 로그인/로그아웃 버튼 전환
+- [x] `js/utils.js` — `cafeapp_users`, `cafeapp_session`, `cafeapp_admin`, `cafeapp_admin_session` 키와 인증 관련 헬퍼 함수 추가 (+ 관리자 시드 계정)
+- [x] `auth/login.html/css/js` — 고객/관리자 공용 로그인 (일반 로그인 실패 시 관리자 로그인 시도)
+- [x] `auth/signup.html/css/js` — 고객 회원가입
+- [x] `my/index.js`, `admin/index.js` 등 로그인 필요한 페이지 전체 — 세션 체크 및 `auth/login`으로 리다이렉트 적용
+- [x] 헤더 내비게이션(고객·관리자 전 페이지)에 로그인 상태에 따른 로그인/로그아웃 버튼 전환
 
 ### 10단계: 고객 - 메뉴 목록 UX 개선 (audio-shop 참고)
 

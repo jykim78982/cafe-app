@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!CafeUtils.requireAdmin()) return;
+
   var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
