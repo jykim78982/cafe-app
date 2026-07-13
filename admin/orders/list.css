@@ -135,13 +135,16 @@ a:focus-visible {
   gap: var(--spacing);
   align-items: center;
   border-bottom: 1px solid var(--color-border);
+  border-left: 2px solid transparent;
   color: inherit;
   min-height: 68px;
-  padding: var(--spacing) 22px;
+  padding: var(--spacing) 20px;
+  transition: background 0.15s ease, border-left-color 0.15s ease;
 }
 
 a.table-row:hover {
   background: rgba(26, 26, 24, 0.045);
+  border-left-color: var(--color-accent);
 }
 
 .table-head {

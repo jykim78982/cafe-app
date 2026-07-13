@@ -5,10 +5,30 @@
   if (!CafeUtils.requireAdmin()) return;
   CafeData.init();
 
+  var VIEW_KEY = "cafeapp_admin_menu_view";
+
   var activeCategory = "전체";
+  var view = localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid";
   var tabsEl = document.getElementById("tabs");
   var listEl = document.getElementById("menu-list");
   var emptyEl = document.getElementById("empty-msg");
+  var gridViewBtn = document.getElementById("gridViewBtn");
+  var listViewBtn = document.getElementById("listViewBtn");
+
+  function applyView() {
+    listEl.classList.toggle("is-list", view === "list");
+    gridViewBtn.setAttribute("aria-pressed", String(view === "grid"));
+    listViewBtn.setAttribute("aria-pressed", String(view === "list"));
+  }
+
+  function setView(next) {
+    view = next;
+    localStorage.setItem(VIEW_KEY, view);
+    applyView();
+  }
+
+  gridViewBtn.addEventListener("click", function () { setView("grid"); });
+  listViewBtn.addEventListener("click", function () { setView("list"); });
 
   function renderTabs() {
     var categories = CafeData.getCategories();
@@ -44,7 +64,7 @@
       var badge = m.soldOut ? '<span class="badge">품절</span>' : "";
 
       return (
-        '<div class="glass menu-card' + (m.soldOut ? " is-soldout" : "") + '">' +
+        '<div class="glass menu-card' + (m.soldOut ? " is-soldout" : "") + '" data-id="' + CafeUtils.escapeHtml(m.id) + '">' +
           '<div class="thumb">' + badge + image + "</div>" +
           '<div class="name">' + CafeUtils.escapeHtml(m.name) + "</div>" +
           '<div class="category">' + CafeUtils.escapeHtml(m.category) + "</div>" +
@@ -73,7 +93,16 @@
         renderList();
       });
     });
+
+    applyView();
   }
+
+  listEl.addEventListener("click", function (event) {
+    if (event.target.closest("a, button")) return;
+    var card = event.target.closest("[data-id]");
+    if (!card) return;
+    location.href = "detail.html?id=" + encodeURIComponent(card.dataset.id);
+  });
 
   renderTabs();
   renderList();
