@@ -36,7 +36,7 @@
 
   function renderThumb(item) {
     if (!item.image) return "";
-    return "<img src=\"" + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(item.image)) + "\" alt=\"" + CafeUtils.escapeHtml(item.name) + "\">";
+    return "<img src=\"" + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(item.image)) + "\" alt=\"" + CafeUtils.escapeHtml(item.name) + "\" style=\"object-position:" + CafeUtils.escapeHtml(item.imagePosition || "50% 50%") + "\">";
   }
 
   function renderRow(item) {

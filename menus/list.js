@@ -72,7 +72,7 @@
     }
 
     return "<img src=\"" + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(menu.image)) + "\" alt=\"" +
-      CafeUtils.escapeHtml(menu.name) + "\">";
+      CafeUtils.escapeHtml(menu.name) + "\" style=\"object-position:" + CafeUtils.escapeHtml(menu.imagePosition || "50% 50%") + "\">";
   }
 
   function renderMenuCard(menu) {

@@ -14,6 +14,97 @@
     return div.innerHTML;
   }
 
+  /* 사진 크롭 위치 선택 모달. 프레임 안에서 사진을 드래그해 보여줄 영역을 정하고,
+     "X% Y%" 형태의 object-position 값을 Promise로 반환합니다(취소 시 null). */
+  function openCropPicker(imageSrc, initialPosition) {
+    return new Promise(function (resolve) {
+      var FRAME = 320;
+      var maxX = 0, maxY = 0, offsetX = 0, offsetY = 0;
+      var dragging = false, startX = 0, startY = 0, startOffsetX = 0, startOffsetY = 0;
+
+      var overlay = document.createElement("div");
+      overlay.className = "crop-picker-overlay";
+      overlay.innerHTML = "" +
+        '<div class="crop-picker-modal">' +
+          '<p class="crop-picker-title">보여줄 영역을 드래그로 선택하세요</p>' +
+          '<div class="crop-picker-frame"><img class="crop-picker-img" alt="크롭 대상 이미지"></div>' +
+          '<div class="crop-picker-actions">' +
+            '<button type="button" class="btn btn-outline" data-action="cancel">취소</button>' +
+            '<button type="button" class="btn btn-primary" data-action="confirm">적용</button>' +
+          "</div>" +
+        "</div>";
+      document.body.appendChild(overlay);
+
+      var frame = overlay.querySelector(".crop-picker-frame");
+      var img = overlay.querySelector(".crop-picker-img");
+
+      function applyTransform() {
+        img.style.transform = "translate(" + (-offsetX) + "px, " + (-offsetY) + "px)";
+      }
+
+      function onPointerDown(e) {
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startOffsetX = offsetX;
+        startOffsetY = offsetY;
+      }
+
+      function onPointerMove(e) {
+        if (!dragging) return;
+        offsetX = Math.min(maxX, Math.max(0, startOffsetX - (e.clientX - startX)));
+        offsetY = Math.min(maxY, Math.max(0, startOffsetY - (e.clientY - startY)));
+        applyTransform();
+      }
+
+      function onPointerUp() {
+        dragging = false;
+      }
+
+      function cleanup(result) {
+        frame.removeEventListener("pointerdown", onPointerDown);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+        document.body.removeChild(overlay);
+        resolve(result);
+      }
+
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) cleanup(null);
+      });
+      overlay.querySelector('[data-action="cancel"]').addEventListener("click", function () {
+        cleanup(null);
+      });
+      overlay.querySelector('[data-action="confirm"]').addEventListener("click", function () {
+        var x = maxX === 0 ? 50 : Math.round((offsetX / maxX) * 100);
+        var y = maxY === 0 ? 50 : Math.round((offsetY / maxY) * 100);
+        cleanup(x + "% " + y + "%");
+      });
+
+      img.addEventListener("load", function () {
+        var scale = Math.max(FRAME / img.naturalWidth, FRAME / img.naturalHeight);
+        var scaledW = img.naturalWidth * scale;
+        var scaledH = img.naturalHeight * scale;
+        img.style.width = scaledW + "px";
+        img.style.height = scaledH + "px";
+        maxX = Math.max(0, scaledW - FRAME);
+        maxY = Math.max(0, scaledH - FRAME);
+
+        var parts = (initialPosition || "50% 50%").split(" ");
+        var px = parseFloat(parts[0]);
+        var py = parseFloat(parts[1]);
+        offsetX = maxX * ((isNaN(px) ? 50 : px) / 100);
+        offsetY = maxY * ((isNaN(py) ? 50 : py) / 100);
+        applyTransform();
+      });
+      img.src = imageSrc;
+
+      frame.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+    });
+  }
+
   function getMenuImageSrc(image) {
     if (!image) return "";
     if (/^(https?:|data:|blob:|\/)/.test(image)) return image;
@@ -173,6 +264,7 @@
     formatPrice: formatPrice,
     escapeHtml: escapeHtml,
     getMenuImageSrc: getMenuImageSrc,
+    openCropPicker: openCropPicker,
     rootPath: rootPath,
     getCart: getCart,
     saveCart: saveCart,

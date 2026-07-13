@@ -19,6 +19,7 @@
       price: row.price,
       description: row.description,
       image: row.image,
+      imagePosition: row.image_position || "50% 50%",
       soldOut: row.sold_out,
       createdAt: row.created_at
     };
@@ -45,6 +46,7 @@
       price: menu.price,
       description: menu.description,
       image: menu.image,
+      image_position: menu.imagePosition || "50% 50%",
       sold_out: menu.soldOut || false
     }).select().single().then(function (res) {
       if (res.error) throw res.error;
@@ -59,6 +61,7 @@
     if (updates.price !== undefined) payload.price = updates.price;
     if (updates.description !== undefined) payload.description = updates.description;
     if (updates.image !== undefined) payload.image = updates.image;
+    if (updates.imagePosition !== undefined) payload.image_position = updates.imagePosition;
     if (updates.soldOut !== undefined) payload.sold_out = updates.soldOut;
 
     return global.sb.from("menus").update(payload).eq("id", id).select().maybeSingle().then(function (res) {

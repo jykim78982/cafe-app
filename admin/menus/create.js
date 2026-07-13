@@ -9,13 +9,25 @@
   var imageInput = document.getElementById("image");
   var imagePreview = document.getElementById("image-preview");
   var selectedFile = null;
+  var imagePosition = "50% 50%";
 
   imageInput.addEventListener("change", function () {
     var file = imageInput.files && imageInput.files[0];
     selectedFile = file || null;
+    imagePosition = "50% 50%";
     imagePreview.innerHTML = file
-      ? '<img src="' + URL.createObjectURL(file) + '" alt="선택한 메뉴 사진 미리보기">'
+      ? '<img src="' + URL.createObjectURL(file) + '" alt="선택한 메뉴 사진 미리보기" style="object-position:' + imagePosition + '">'
       : "이미지 없음";
+  });
+
+  imagePreview.addEventListener("click", async function (event) {
+    var img = event.target.closest("img");
+    if (!img) return;
+    var result = await CafeUtils.openCropPicker(img.src, imagePosition);
+    if (result) {
+      imagePosition = result;
+      img.style.objectPosition = imagePosition;
+    }
   });
 
   form.addEventListener("submit", async function (e) {
@@ -37,7 +49,8 @@
         category: document.getElementById("category").value,
         price: price,
         description: document.getElementById("description").value.trim(),
-        image: image
+        image: image,
+        imagePosition: imagePosition
       });
 
       window.location.href = "list";
