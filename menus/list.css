@@ -85,10 +85,45 @@
 
 .filter-panel {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 170px 170px;
+  grid-template-columns: minmax(220px, 1fr) 170px 170px 160px;
   gap: var(--spacing);
   margin-top: var(--spacing-lg);
   padding: var(--spacing);
+}
+
+.view-toggle-group {
+  display: grid;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.view-btn {
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--color-text-muted);
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.view-btn + .view-btn {
+  border-left: 1px solid var(--color-border);
+}
+
+.view-btn[aria-pressed="true"] {
+  background: var(--color-primary);
+  color: #fff;
 }
 
 label {
@@ -149,6 +184,16 @@ a:focus-visible {
 .menu-card {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-card:not(.is-soldout):hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-glass);
+  transform: translateY(-2px);
 }
 
 .menu-visual {
@@ -232,10 +277,64 @@ a:focus-visible {
   font-weight: 900;
 }
 
-.add-btn {
+.menu-actions {
+  display: flex;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.add-btn,
+.buy-btn {
+  flex: 1;
   min-height: 38px;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
+}
+
+/* ===== 목록 보기 ===== */
+.menu-grid.is-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.menu-grid.is-list .menu-card {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing);
+  padding: 12px;
+}
+
+.menu-grid.is-list .menu-visual {
+  flex: none;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 0;
+}
+
+.menu-grid.is-list .menu-body {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.menu-grid.is-list .category-label,
+.menu-grid.is-list h3,
+.menu-grid.is-list .menu-desc {
+  grid-column: 1;
+}
+
+.menu-grid.is-list .price {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  margin-left: var(--spacing);
+}
+
+.menu-grid.is-list .menu-actions {
+  grid-column: 1 / -1;
+  max-width: 320px;
 }
 
 .empty-state {

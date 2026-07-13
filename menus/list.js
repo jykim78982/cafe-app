@@ -3,15 +3,20 @@
 
   CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
+  var VIEW_KEY = "cafeapp_menu_view";
+
   var state = {
     search: "",
     category: "전체",
-    sort: "recommended"
+    sort: "recommended",
+    view: localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid"
   };
 
   var searchInput = document.getElementById("searchInput");
   var categoryFilter = document.getElementById("categoryFilter");
   var sortSelect = document.getElementById("sortSelect");
+  var gridViewBtn = document.getElementById("gridViewBtn");
+  var listViewBtn = document.getElementById("listViewBtn");
   var menuGrid = document.getElementById("menuGrid");
   var emptyState = document.getElementById("emptyState");
   var resultCount = document.getElementById("resultCount");
@@ -83,6 +88,7 @@
 
   function renderMenuCard(menu) {
     var badge = menu.soldOut ? "<span class=\"menu-badge\">품절</span>" : "";
+    var disabled = menu.soldOut ? " disabled" : "";
 
     return "" +
       "<article class=\"menu-card" + (menu.soldOut ? " is-soldout" : "") + "\">" +
@@ -95,10 +101,24 @@
           "<a href=\"detail.html?id=" + encodeURIComponent(menu.id) + "\"><h3>" + CafeUtils.escapeHtml(menu.name) + "</h3></a>" +
           "<p class=\"menu-desc\">" + CafeUtils.escapeHtml(menu.description) + "</p>" +
           "<strong class=\"price\">" + CafeUtils.formatPrice(menu.price) + "</strong>" +
-          "<button class=\"btn btn-primary btn-block add-btn\" type=\"button\" data-cart-id=\"" + CafeUtils.escapeHtml(menu.id) + "\"" +
-            (menu.soldOut ? " disabled" : "") + ">담기</button>" +
+          "<div class=\"menu-actions\">" +
+            "<button class=\"btn btn-outline add-btn\" type=\"button\" data-cart-id=\"" + CafeUtils.escapeHtml(menu.id) + "\"" + disabled + ">담기</button>" +
+            "<button class=\"btn btn-primary buy-btn\" type=\"button\" data-buy-id=\"" + CafeUtils.escapeHtml(menu.id) + "\"" + disabled + ">바로 주문</button>" +
+          "</div>" +
         "</div>" +
       "</article>";
+  }
+
+  function applyView() {
+    menuGrid.classList.toggle("is-list", state.view === "list");
+    gridViewBtn.setAttribute("aria-pressed", String(state.view === "grid"));
+    listViewBtn.setAttribute("aria-pressed", String(state.view === "list"));
+  }
+
+  function setView(view) {
+    state.view = view;
+    localStorage.setItem(VIEW_KEY, view);
+    applyView();
   }
 
   function render() {
@@ -106,6 +126,7 @@
     menuGrid.innerHTML = menus.map(renderMenuCard).join("");
     emptyState.hidden = menus.length > 0;
     resultCount.textContent = menus.length + "개 표시 중";
+    applyView();
   }
 
   searchInput.addEventListener("input", function (event) {
@@ -124,6 +145,15 @@
   });
 
   menuGrid.addEventListener("click", function (event) {
+    var buyButton = event.target.closest("[data-buy-id]");
+    if (buyButton) {
+      var buyMenu = CafeData.getMenuById(buyButton.dataset.buyId);
+      if (!buyMenu || buyMenu.soldOut) return;
+      CafeUtils.addToCart({ menuId: buyMenu.id, name: buyMenu.name, price: buyMenu.price, image: buyMenu.image, qty: 1 });
+      location.href = "../basket/list.html";
+      return;
+    }
+
     var button = event.target.closest("[data-cart-id]");
     if (!button) return;
 
@@ -140,6 +170,9 @@
     updateCartCount();
     showToast("'" + menu.name + "' 메뉴를 장바구니에 담았습니다.");
   });
+
+  gridViewBtn.addEventListener("click", function () { setView("grid"); });
+  listViewBtn.addEventListener("click", function () { setView("list"); });
 
   renderCategoryOptions();
   updateCartCount();
