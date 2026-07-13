@@ -1,0 +1,17 @@
+{
+  "name": "cafe-app",
+  "version": "1.0.0",
+  "description": "카페 메뉴를 둘러보고 주문할 수 있는 웹앱입니다. 빌드 도구나 프레임워크 없이 정적 HTML/CSS/Vanilla JS로 만듭니다.",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve -l 3132",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "serve": "^14.2.6"
+  }
+}

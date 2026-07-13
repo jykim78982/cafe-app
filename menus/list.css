@@ -188,6 +188,7 @@ a:focus-visible {
   border: 1px solid transparent;
   border-radius: var(--radius);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .menu-card:not(.is-soldout):hover {
@@ -277,19 +278,6 @@ a:focus-visible {
   font-weight: 900;
 }
 
-.menu-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.add-btn,
-.buy-btn {
-  flex: 1;
-  min-height: 38px;
-  font-size: 0.85rem;
-}
-
 /* ===== 목록 보기 ===== */
 .menu-grid.is-list {
   display: flex;
@@ -332,29 +320,10 @@ a:focus-visible {
   margin-left: var(--spacing);
 }
 
-.menu-grid.is-list .menu-actions {
-  grid-column: 1 / -1;
-  max-width: 320px;
-}
-
 .empty-state {
   padding: 32px;
   color: var(--color-text-muted);
   text-align: center;
-  font-weight: 800;
-}
-
-.toast {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 20;
-  max-width: min(320px, calc(100vw - 48px));
-  border-radius: var(--radius);
-  background: var(--color-primary-dark);
-  color: #fff;
-  box-shadow: var(--shadow-glass);
-  padding: 14px 16px;
   font-weight: 800;
 }
 

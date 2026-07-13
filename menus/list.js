@@ -21,22 +21,11 @@
   var emptyState = document.getElementById("emptyState");
   var resultCount = document.getElementById("resultCount");
   var cartCount = document.getElementById("cartCount");
-  var toast = document.getElementById("toast");
-  var toastTimer = null;
 
   CafeData.init();
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
-  }
-
-  function showToast(message) {
-    toast.textContent = message;
-    toast.hidden = false;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () {
-      toast.hidden = true;
-    }, 1800);
   }
 
   function renderCategoryOptions() {
@@ -88,25 +77,20 @@
 
   function renderMenuCard(menu) {
     var badge = menu.soldOut ? "<span class=\"menu-badge\">품절</span>" : "";
-    var disabled = menu.soldOut ? " disabled" : "";
 
     return "" +
-      "<article class=\"menu-card" + (menu.soldOut ? " is-soldout" : "") + "\">" +
-        "<a class=\"menu-visual\" href=\"detail?id=" + encodeURIComponent(menu.id) + "\">" +
+      "<a class=\"menu-card" + (menu.soldOut ? " is-soldout" : "") + "\" href=\"detail?id=" + encodeURIComponent(menu.id) + "\">" +
+        "<span class=\"menu-visual\">" +
           badge +
           createImageMarkup(menu) +
-        "</a>" +
+        "</span>" +
         "<div class=\"menu-body\">" +
           "<span class=\"category-label\">" + CafeUtils.escapeHtml(menu.category) + "</span>" +
-          "<a href=\"detail?id=" + encodeURIComponent(menu.id) + "\"><h3>" + CafeUtils.escapeHtml(menu.name) + "</h3></a>" +
+          "<h3>" + CafeUtils.escapeHtml(menu.name) + "</h3>" +
           "<p class=\"menu-desc\">" + CafeUtils.escapeHtml(menu.description) + "</p>" +
           "<strong class=\"price\">" + CafeUtils.formatPrice(menu.price) + "</strong>" +
-          "<div class=\"menu-actions\">" +
-            "<button class=\"btn btn-outline add-btn\" type=\"button\" data-cart-id=\"" + CafeUtils.escapeHtml(menu.id) + "\"" + disabled + ">담기</button>" +
-            "<button class=\"btn btn-primary buy-btn\" type=\"button\" data-buy-id=\"" + CafeUtils.escapeHtml(menu.id) + "\"" + disabled + ">바로 주문</button>" +
-          "</div>" +
         "</div>" +
-      "</article>";
+      "</a>";
   }
 
   function applyView() {
@@ -142,33 +126,6 @@
   sortSelect.addEventListener("change", function (event) {
     state.sort = event.target.value;
     render();
-  });
-
-  menuGrid.addEventListener("click", function (event) {
-    var buyButton = event.target.closest("[data-buy-id]");
-    if (buyButton) {
-      var buyMenu = CafeData.getMenuById(buyButton.dataset.buyId);
-      if (!buyMenu || buyMenu.soldOut) return;
-      CafeUtils.addToCart({ menuId: buyMenu.id, name: buyMenu.name, price: buyMenu.price, image: buyMenu.image, qty: 1 });
-      location.href = "../basket/list";
-      return;
-    }
-
-    var button = event.target.closest("[data-cart-id]");
-    if (!button) return;
-
-    var menu = CafeData.getMenuById(button.dataset.cartId);
-    if (!menu || menu.soldOut) return;
-
-    CafeUtils.addToCart({
-      menuId: menu.id,
-      name: menu.name,
-      price: menu.price,
-      image: menu.image,
-      qty: 1
-    });
-    updateCartCount();
-    showToast("'" + menu.name + "' 메뉴를 장바구니에 담았습니다.");
   });
 
   gridViewBtn.addEventListener("click", function () { setView("grid"); });
