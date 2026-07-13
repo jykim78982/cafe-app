@@ -216,7 +216,7 @@ cafe-app/
 - [x] `admin/menus/list.css`, `admin/orders/list.css` — 행/카드에 커서를 올렸을 때 테두리 강조 효과 추가
 - [x] `admin/menus/list.js`, `admin/orders/list.js` — 행/카드 클릭 시 상세 페이지로 이동 (버튼·링크 클릭은 제외)
 
-### 14단계: 공통 - 레이아웃 점검 (audio-shop 참고)
+### 14단계: 공통 - 레이아웃 점검 (audio-shop 참고) ✅
 
-- [ ] 전 페이지 `.page` 등 중앙 정렬이 필요한 컨테이너에 `margin: 0 auto` 적용 여부 점검
-- [ ] `hidden` 속성으로 토글되는 요소에 `display: grid/flex` 등이 걸려 있는 경우 `[hidden] { display: none; }` 오버라이드 규칙 추가 (CSS 우선순위 충돌로 실제로는 안 숨겨지는 버그 방지)
+- [x] 전 페이지 `.page` 등 중앙 정렬이 필요한 컨테이너에 `margin: 0 auto` 적용 여부 점검
+- [x] `hidden` 속성으로 토글되는 요소에 `display: grid/flex` 등이 걸려 있는 경우 `[hidden] { display: none; }` 오버라이드 규칙 추가 (CSS 우선순위 충돌로 실제로는 안 숨겨지는 버그 방지)
