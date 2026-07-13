@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cafe App</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">CAFE APP</a>
+      <nav class="nav-links" aria-label="고객 메뉴">
+        <a href="menus/list.html">MENU</a>
+        <a href="basket/list.html">BASKET <span id="cartCount">0</span></a>
+        <a href="my/index.html">MY PAGE</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero-photo">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/videos/hero-coffee.mp4" type="video/mp4">
+    </video>
+    <div class="hero-scrim"></div>
+    <div class="hero-overlay">
+      <p>커피 한 잔이 주는 기분 좋은 여유로</p>
+      <p>오늘 하루가 조금 더 다정해지길 바랍니다.</p>
+    </div>
+  </section>
+
+  <main class="container page-main">
+    <section class="choice-section" aria-label="카페 소개">
+      <p class="section-eyebrow">Our Choice</p>
+      <h1 class="section-title">우리가 커피를 내리는 방식</h1>
+
+      <article class="choice-row">
+        <span class="choice-index">01</span>
+        <div class="choice-body">
+          <h2>신선한 원두</h2>
+          <p>매일 아침 로스팅한 원두로 내린 향 깊은 커피를 만나보세요.</p>
+        </div>
+      </article>
+      <article class="choice-row">
+        <span class="choice-index">02</span>
+        <div class="choice-body">
+          <h2>매일 굽는 디저트</h2>
+          <p>당일 제작한 케이크와 베이커리로 커피와 완벽한 조화를 이룹니다.</p>
+        </div>
+      </article>
+      <article class="choice-row">
+        <span class="choice-index">03</span>
+        <div class="choice-body">
+          <h2>편안한 공간</h2>
+          <p>여백이 있는 공간에서 온전히 나만의 시간을 보내세요.</p>
+        </div>
+      </article>
+
+      <a class="btn btn-primary hero-cta" href="menus/list.html">메뉴 보러가기</a>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing);
+  min-height: 68px;
+}
+
+.logo {
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.admin-nav a {
+  padding: 4px 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.admin-nav a[aria-current="page"],
+.admin-nav a:hover {
+  color: var(--color-primary);
+}
+
+.page {
+  padding-top: 32px;
+  padding-bottom: 64px;
+}
+
+.hero {
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+}
+
+.eyebrow {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: 2.1rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.hero p:last-child {
+  color: var(--color-text-muted);
+  margin: 10px 0 0;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 170px 170px;
+  gap: var(--spacing);
+  margin-bottom: 18px;
+  padding: var(--spacing);
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  padding: 0 12px;
+}
+
+input:focus,
+select:focus,
+a:focus-visible {
+  outline: 2px solid rgba(138, 106, 79, 0.35);
+  outline-offset: 2px;
+}
+
+.orders-panel {
+  overflow: hidden;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing);
+  border-bottom: 1px solid var(--color-border);
+  padding: 20px 22px;
+}
+
+.panel-heading h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.panel-heading p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.1fr) minmax(120px, 0.9fr) 120px 120px minmax(150px, 1fr);
+  gap: var(--spacing);
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  color: inherit;
+  min-height: 68px;
+  padding: var(--spacing) 22px;
+}
+
+a.table-row:hover {
+  background: rgba(26, 26, 24, 0.045);
+}
+
+.table-head {
+  background: rgba(26, 26, 24, 0.03);
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.order-id,
+.order-total {
+  font-weight: 900;
+}
+
+.customer,
+.order-date {
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.status-chip {
+  width: fit-content;
+  border-radius: 4px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 4px 9px;
+  white-space: nowrap;
+}
+
+.status-preparing,
+.status-ready {
+  background: var(--color-success);
+}
+
+.status-completed {
+  background: #8a8a86;
+}
+
+.status-cancelled {
+  background: var(--color-danger);
+}
+
+.empty-state {
+  color: var(--color-text-muted);
+  font-weight: 800;
+  margin: 0;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+@media (max-width: 820px) {
+  .admin-header-inner,
+  .panel-heading {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .table-head {
+    display: none;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: var(--spacing);
+  }
+
+  .table-row span::before {
+    color: var(--color-text-muted);
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .order-id::before { content: "주문번호"; }
+  .customer::before { content: "주문자"; }
+  .status-chip::before { content: "상태"; }
+  .order-total::before { content: "주문 금액"; }
+  .order-date::before { content: "주문 시간"; }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-top: 24px;
+  }
+
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .toolbar,
+  .panel-heading {
+    padding: var(--spacing);
+  }
+}

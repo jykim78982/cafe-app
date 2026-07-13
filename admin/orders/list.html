@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주문 관리 - 카페 관리자</title>
+<link rel="stylesheet" href="../../css/variables.css">
+<link rel="stylesheet" href="list.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header-inner">
+      <a class="logo" href="../index.html">카페 관리자</a>
+      <nav class="admin-nav" aria-label="관리자 메뉴">
+        <a href="../index.html">대시보드</a>
+        <a href="../menus/list.html">메뉴 관리</a>
+        <a href="list.html" aria-current="page">주문 관리</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Order Management</p>
+        <h1>주문 목록</h1>
+        <p>전체 주문을 확인하고 상세 화면으로 이동합니다.</p>
+      </div>
+    </section>
+
+    <section class="toolbar glass" aria-label="주문 검색과 필터">
+      <label>
+        <span>검색</span>
+        <input id="searchInput" type="search" placeholder="주문번호, 주문자, 메뉴명">
+      </label>
+      <label>
+        <span>상태</span>
+        <select id="statusFilter">
+          <option value="all">전체</option>
+          <option value="pending">주문 대기</option>
+          <option value="confirmed">주문 확인</option>
+          <option value="preparing">제조 중</option>
+          <option value="ready">픽업 대기</option>
+          <option value="completed">완료</option>
+          <option value="cancelled">취소</option>
+        </select>
+      </label>
+      <label>
+        <span>정렬</span>
+        <select id="sortSelect">
+          <option value="latest">최근 주문순</option>
+          <option value="oldest">오래된 주문순</option>
+          <option value="amountDesc">금액 높은순</option>
+          <option value="amountAsc">금액 낮은순</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="orders-panel glass">
+      <div class="panel-heading">
+        <h2>전체 주문</h2>
+        <p id="resultCount">0건 표시</p>
+      </div>
+      <div class="order-table" role="table" aria-label="관리자 주문 목록">
+        <div class="table-row table-head" role="row">
+          <span role="columnheader">주문번호</span>
+          <span role="columnheader">주문자</span>
+          <span role="columnheader">상태</span>
+          <span role="columnheader">금액</span>
+          <span role="columnheader">주문 시간</span>
+        </div>
+        <div id="ordersList"></div>
+      </div>
+      <p class="empty-state" id="emptyState" hidden>주문 데이터가 없습니다.</p>
+    </section>
+  </main>
+
+  <script src="../../js/utils.js"></script>
+  <script src="list.js"></script>
+</body>
+</html>

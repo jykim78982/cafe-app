@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메뉴 상세 | Cafe App</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="detail.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">CAFE APP</a>
+      <nav class="nav-links" aria-label="고객 메뉴">
+        <a href="list.html">MENU</a>
+        <a href="../basket/list.html">BASKET <span id="cartCount">0</span></a>
+        <a href="../orders/list.html">ORDERS</a>
+        <a href="../my/index.html">MY PAGE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-main">
+    <a class="back-link" href="list.html">목록으로</a>
+    <section class="detail-card glass" id="detailCard"></section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="detail.js"></script>
+</body>
+</html>

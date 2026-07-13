@@ -1,0 +1,132 @@
+/* 전역 CSS 변수 + 리셋. 모든 페이지가 공통으로 불러오는 유일한 전역 스타일시트입니다. */
+/* 디자인 톤: 파란만잔(xn--si2bp7bowuq9k.com) 스타일 참고 — 사진 중심의 미니멀 에디토리얼 무드 */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-glass: rgba(255, 255, 255, 0.72);
+  --color-primary: #1a1a18;
+  --color-primary-dark: #000000;
+  --color-accent: #8a6a4f;
+  --color-text: #1a1a18;
+  --color-text-muted: #8f8b85;
+  --color-border: #ececea;
+  --color-danger: #c0392b;
+  --color-success: #2f9e44;
+  --color-tile: #f3ede1;
+
+  --radius-sm: 3px;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-glass: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --blur-glass: 8px;
+  --max-width: 1080px;
+  --spacing-sm: 8px;
+  --spacing: 16px;
+  --spacing-lg: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* 글래스모피즘 카드 — 역할별 페이지들이 공통으로 재사용하는 표면 스타일 */
+.glass {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-glass);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.btn-block {
+  width: 100%;
+}

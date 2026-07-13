@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>관리자 대시보드 - 카페 관리자</title>
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <header class="admin-header">
+    <div class="container admin-header-inner">
+      <a class="logo" href="index.html">카페 관리자</a>
+      <nav class="admin-nav" aria-label="관리자 메뉴">
+        <a href="index.html" aria-current="page">대시보드</a>
+        <a href="menus/list.html">메뉴 관리</a>
+        <a href="orders/list.html">주문 관리</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Admin Dashboard</p>
+        <h1>운영 현황</h1>
+        <p>주문 데이터를 기준으로 주문, 매출, 메뉴 상태를 확인합니다.</p>
+      </div>
+    </section>
+
+    <section class="summary-grid" aria-label="주문 및 매출 요약">
+      <article class="glass summary-card">
+        <span>총 주문 수</span>
+        <strong id="totalOrders">0</strong>
+      </article>
+      <article class="glass summary-card">
+        <span>총 매출</span>
+        <strong id="totalSales">0원</strong>
+      </article>
+      <article class="glass summary-card">
+        <span>대기 주문</span>
+        <strong id="pendingOrders">0</strong>
+      </article>
+      <article class="glass summary-card">
+        <span>진행 주문</span>
+        <strong id="activeOrders">0</strong>
+      </article>
+      <article class="glass summary-card">
+        <span>등록 메뉴</span>
+        <strong id="menuCount">0</strong>
+      </article>
+      <article class="glass summary-card">
+        <span>품절 메뉴</span>
+        <strong id="soldOutCount">0</strong>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="glass panel">
+        <div class="panel-heading">
+          <h2>주문 상태</h2>
+          <p id="orderStatusMeta">0개 주문</p>
+        </div>
+        <div class="status-list" id="statusList"></div>
+      </article>
+
+      <article class="glass panel">
+        <div class="panel-heading">
+          <h2>최근 주문</h2>
+          <p id="recentMeta">최근 5건</p>
+        </div>
+        <div class="recent-list" id="recentList"></div>
+        <p class="empty-state" id="emptyOrders" hidden>아직 주문 데이터가 없습니다.</p>
+      </article>
+    </section>
+  </main>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
