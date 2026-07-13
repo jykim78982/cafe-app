@@ -1,7 +1,7 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
   var params = new URLSearchParams(window.location.search);
   var menuId = params.get("id");
@@ -13,8 +13,6 @@
   var cartModal = document.getElementById("cartModal");
   var cartModalDesc = document.getElementById("cartModalDesc");
   var modalContinueBtn = document.getElementById("modalContinueBtn");
-
-  CafeData.init();
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
@@ -137,7 +135,7 @@
     if (event.target === cartModal) cartModal.hidden = true;
   });
 
-  var menu = CafeData.getMenuById(menuId);
+  var menu = await CafeData.getMenuById(menuId);
   updateCartCount();
 
   if (menu) {

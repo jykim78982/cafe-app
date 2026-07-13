@@ -1,7 +1,7 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
   var VIEW_KEY = "cafeapp_menu_view";
 
@@ -12,6 +12,8 @@
     view: localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid"
   };
 
+  var cachedMenus = [];
+
   var searchInput = document.getElementById("searchInput");
   var categoryFilter = document.getElementById("categoryFilter");
   var sortSelect = document.getElementById("sortSelect");
@@ -21,8 +23,6 @@
   var emptyState = document.getElementById("emptyState");
   var resultCount = document.getElementById("resultCount");
   var cartCount = document.getElementById("cartCount");
-
-  CafeData.init();
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
@@ -39,7 +39,7 @@
   function getFilteredMenus() {
     var keyword = state.search.trim().toLowerCase();
 
-    return CafeData.getMenus()
+    return cachedMenus
       .filter(function (menu) {
         return state.category === "전체" || menu.category === state.category;
       })
@@ -133,5 +133,6 @@
 
   renderCategoryOptions();
   updateCartCount();
+  cachedMenus = await CafeData.getMenus();
   render();
 })();

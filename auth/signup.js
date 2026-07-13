@@ -1,9 +1,8 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeData.init();
-
-  if (CafeUtils.getSession()) {
+  var session = await CafeUtils.getSession();
+  if (session) {
     location.href = "../my/";
     return;
   }
@@ -11,7 +10,7 @@
   var form = document.getElementById("signupForm");
   var errorEl = document.getElementById("formError");
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
     errorEl.hidden = true;
 
@@ -31,14 +30,18 @@
       return;
     }
 
-    var result = CafeUtils.signup({ name: name, email: email, password: password });
-    if (result && result.error) {
+    var result = await CafeUtils.signup({ name: name, email: email, password: password });
+    if (result.error) {
       errorEl.textContent = result.error;
       errorEl.hidden = false;
       return;
     }
 
-    CafeUtils.login(email, password);
+    if (result.needsConfirmation) {
+      location.href = "login?confirm=1";
+      return;
+    }
+
     location.href = "../my/";
   });
 })();

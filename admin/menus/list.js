@@ -1,9 +1,8 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
-  CafeData.init();
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
   var VIEW_KEY = "cafeapp_admin_menu_view";
 
@@ -45,8 +44,8 @@
     });
   }
 
-  function renderList() {
-    var all = CafeData.getMenus();
+  async function renderList() {
+    var all = await CafeData.getMenus();
     var menus = activeCategory === "전체" ? all : all.filter(function (m) { return m.category === activeCategory; });
 
     if (menus.length === 0) {
@@ -79,17 +78,17 @@
     }).join("");
 
     listEl.querySelectorAll(".toggle-soldout").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var menu = CafeData.getMenuById(btn.dataset.id);
-        CafeData.updateMenu(btn.dataset.id, { soldOut: !menu.soldOut });
+      btn.addEventListener("click", async function () {
+        var menu = await CafeData.getMenuById(btn.dataset.id);
+        await CafeData.updateMenu(btn.dataset.id, { soldOut: !menu.soldOut });
         renderList();
       });
     });
 
     listEl.querySelectorAll(".delete-menu").forEach(function (btn) {
-      btn.addEventListener("click", function () {
+      btn.addEventListener("click", async function () {
         if (!confirm("이 메뉴를 삭제할까요?")) return;
-        CafeData.deleteMenu(btn.dataset.id);
+        await CafeData.deleteMenu(btn.dataset.id);
         renderList();
       });
     });

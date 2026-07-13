@@ -1,9 +1,8 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
-  var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
     confirmed: "주문 확인",
@@ -19,72 +18,6 @@
   var cartCount = document.getElementById("cartCount");
   var toast = document.getElementById("toast");
   var toastTimer = null;
-
-  function readRawOrders() {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    if (raw === null) return [];
-
-    try {
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveOrders(orders) {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  }
-
-  function normalizeOrder(order, index) {
-    var items = Array.isArray(order.items) ? order.items : [];
-    var total = Number(order.total);
-
-    if (!Number.isFinite(total)) {
-      total = items.reduce(function (sum, item) {
-        return sum + Number(item.price || 0) * Number(item.qty || item.quantity || 1);
-      }, 0);
-    }
-
-    return {
-      id: order.id || "order-" + (index + 1),
-      status: order.status || "pending",
-      createdAt: order.createdAt || order.date || "",
-      updatedAt: order.updatedAt || "",
-      total: total,
-      items: items.map(function (item) {
-        return {
-          name: item.name || "메뉴",
-          price: Number(item.price || 0),
-          qty: Number(item.qty || item.quantity || 1)
-        };
-      })
-    };
-  }
-
-  function getOrders() {
-    return readRawOrders().map(normalizeOrder);
-  }
-
-  function getOrderById(id) {
-    return getOrders().find(function (order) {
-      return String(order.id) === String(id);
-    }) || null;
-  }
-
-  function updateOrderStatus(id, status) {
-    var rawOrders = readRawOrders();
-    var target = rawOrders.find(function (order, index) {
-      return String(order.id || "order-" + (index + 1)) === String(id);
-    });
-
-    if (!target) return null;
-
-    target.status = status;
-    target.updatedAt = new Date().toISOString();
-    saveOrders(rawOrders);
-    return getOrderById(id);
-  }
 
   function formatDate(value) {
     var date = new Date(value);
@@ -191,11 +124,11 @@
         "</div>" +
       "</div>";
 
-    document.getElementById("cancelButton").addEventListener("click", function () {
+    document.getElementById("cancelButton").addEventListener("click", async function () {
       if (!canCancel(order)) return;
       if (!confirm("이 주문을 취소할까요?")) return;
 
-      var updatedOrder = updateOrderStatus(order.id, "cancelled");
+      var updatedOrder = await CafeData.cancelOrder(order.id);
       if (updatedOrder) {
         showToast("주문이 취소되었습니다.");
         renderDetail(updatedOrder);
@@ -205,7 +138,7 @@
 
   updateCartCount();
 
-  var order = getOrderById(orderId);
+  var order = await CafeData.getOrderById(orderId);
   if (order) {
     renderDetail(order);
   } else {

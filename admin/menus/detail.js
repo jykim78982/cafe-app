@@ -1,12 +1,11 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
-  CafeData.init();
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
   var id = new URLSearchParams(window.location.search).get("id");
-  var menu = id ? CafeData.getMenuById(id) : null;
+  var menu = id ? await CafeData.getMenuById(id) : null;
   var detailEl = document.getElementById("menu-detail");
 
   if (!menu) {
@@ -31,9 +30,9 @@
       "</div>" +
     "</div>";
 
-  document.getElementById("delete-btn").addEventListener("click", function () {
+  document.getElementById("delete-btn").addEventListener("click", async function () {
     if (!confirm("이 메뉴를 삭제할까요?")) return;
-    CafeData.deleteMenu(menu.id);
+    await CafeData.deleteMenu(menu.id);
     window.location.href = "list";
   });
 })();

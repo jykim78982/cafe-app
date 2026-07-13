@@ -1,10 +1,9 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
-  var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
     confirmed: "주문 확인",
@@ -19,63 +18,6 @@
   var detailCard = document.getElementById("detailCard");
   var statusMessage = document.getElementById("statusMessage");
   var statusMessageTimer = null;
-
-  function readRawOrders() {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    if (raw === null) return [];
-
-    try {
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveOrders(orders) {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  }
-
-  function readOrders() {
-    return readRawOrders().map(normalizeOrder);
-  }
-
-  function normalizeOrder(order, index) {
-    var items = Array.isArray(order.items) ? order.items : [];
-    var total = Number(order.total);
-
-    if (!Number.isFinite(total)) {
-      total = items.reduce(function (sum, item) {
-        return sum + Number(item.price || 0) * Number(item.qty || item.quantity || 1);
-      }, 0);
-    }
-
-    return {
-      id: order.id || "order-" + (index + 1),
-      customer: order.customerName || order.customer || order.name || "방문 고객",
-      phone: order.phone || order.customerPhone || "미입력",
-      status: order.status || "pending",
-      createdAt: order.createdAt || order.date || "",
-      total: total,
-      items: items.map(function (item) {
-        var qty = Number(item.qty || item.quantity || 1);
-        var price = Number(item.price || 0);
-
-        return {
-          name: item.name || "메뉴",
-          price: price,
-          qty: qty,
-          total: price * qty
-        };
-      })
-    };
-  }
-
-  function getOrderById(id) {
-    return readOrders().find(function (order) {
-      return String(order.id) === String(id);
-    }) || null;
-  }
 
   function formatDate(value) {
     var date = new Date(value);
@@ -107,20 +49,6 @@
     }, 1800);
   }
 
-  function updateOrderStatus(id, status) {
-    var rawOrders = readRawOrders();
-    var target = rawOrders.find(function (order, index) {
-      return String(order.id || "order-" + (index + 1)) === String(id);
-    });
-
-    if (!target) return null;
-
-    target.status = status;
-    target.updatedAt = new Date().toISOString();
-    saveOrders(rawOrders);
-    return getOrderById(id);
-  }
-
   function renderNotFound() {
     detailCard.innerHTML = "" +
       "<div class=\"empty-state\">" +
@@ -139,7 +67,7 @@
         "<li>" +
           "<span class=\"item-name\">" + CafeUtils.escapeHtml(item.name) + "</span>" +
           "<span class=\"item-qty\">" + item.qty + "개</span>" +
-          "<span class=\"item-total\">" + CafeUtils.formatPrice(item.total) + "</span>" +
+          "<span class=\"item-total\">" + CafeUtils.formatPrice(item.price * item.qty) + "</span>" +
         "</li>";
     }).join("");
   }
@@ -149,7 +77,7 @@
       return sum + item.qty;
     }, 0);
     var subtotal = order.items.reduce(function (sum, item) {
-      return sum + item.total;
+      return sum + item.price * item.qty;
     }, 0);
 
     detailCard.innerHTML = "" +
@@ -164,8 +92,8 @@
         "</span>" +
       "</div>" +
       "<div class=\"info-grid\" aria-label=\"주문자 및 주문 요약\">" +
-        "<div class=\"info-card\"><span>주문자</span><strong>" + CafeUtils.escapeHtml(order.customer) + "</strong></div>" +
-        "<div class=\"info-card\"><span>연락처</span><strong>" + CafeUtils.escapeHtml(order.phone) + "</strong></div>" +
+        "<div class=\"info-card\"><span>주문자</span><strong>방문 고객</strong></div>" +
+        "<div class=\"info-card\"><span>연락처</span><strong>미입력</strong></div>" +
         "<div class=\"info-card\"><span>주문 상태</span><strong>" + CafeUtils.escapeHtml(getStatusLabel(order.status)) + "</strong></div>" +
         "<div class=\"info-card\"><span>총 수량</span><strong>" + itemCount + "개</strong></div>" +
       "</div>" +
@@ -197,8 +125,8 @@
         "<div class=\"total-row final\"><span>총 금액</span><strong>" + CafeUtils.formatPrice(order.total) + "</strong></div>" +
       "</div>";
 
-    document.getElementById("statusSelect").addEventListener("change", function (event) {
-      var updatedOrder = updateOrderStatus(order.id, event.target.value);
+    document.getElementById("statusSelect").addEventListener("change", async function (event) {
+      var updatedOrder = await CafeData.updateOrderStatus(order.id, event.target.value);
       if (!updatedOrder) {
         showStatusMessage("주문 상태를 저장하지 못했습니다.");
         return;
@@ -209,7 +137,7 @@
     });
   }
 
-  var order = getOrderById(orderId);
+  var order = await CafeData.getOrderById(orderId);
 
   if (order) {
     renderDetail(order);

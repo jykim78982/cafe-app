@@ -1,12 +1,11 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
-  CafeData.init();
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
   var id = new URLSearchParams(window.location.search).get("id");
-  var menu = id ? CafeData.getMenuById(id) : null;
+  var menu = id ? await CafeData.getMenuById(id) : null;
 
   if (!menu) {
     document.querySelector(".page").innerHTML = "<h1>메뉴를 찾을 수 없습니다</h1><a class=\"btn btn-outline\" href=\"list\">목록으로</a>";
@@ -23,7 +22,8 @@
   var errorEl = document.getElementById("form-error");
   var imageInput = document.getElementById("image");
   var imagePreview = document.getElementById("image-preview");
-  var imagePath = menu.image || "";
+  var selectedFile = null;
+  var existingImage = menu.image || "";
 
   function renderImagePreview(src) {
     imagePreview.innerHTML = src
@@ -31,15 +31,15 @@
       : "이미지 없음";
   }
 
-  renderImagePreview(CafeUtils.getMenuImageSrc(imagePath));
+  renderImagePreview(CafeUtils.getMenuImageSrc(existingImage));
 
   imageInput.addEventListener("change", function () {
     var file = imageInput.files && imageInput.files[0];
-    imagePath = file ? "images/menus/" + file.name : imagePath;
-    renderImagePreview(file ? URL.createObjectURL(file) : CafeUtils.getMenuImageSrc(imagePath));
+    selectedFile = file || null;
+    renderImagePreview(file ? URL.createObjectURL(file) : CafeUtils.getMenuImageSrc(existingImage));
   });
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
     var name = document.getElementById("name").value.trim();
     var price = Number(document.getElementById("price").value);
@@ -50,15 +50,22 @@
       return;
     }
 
-    CafeData.updateMenu(menu.id, {
-      name: name,
-      category: document.getElementById("category").value,
-      price: price,
-      description: document.getElementById("description").value.trim(),
-      image: imagePath,
-      soldOut: document.getElementById("soldOut").checked
-    });
+    try {
+      var image = selectedFile ? await CafeData.uploadMenuImage(selectedFile) : existingImage;
 
-    window.location.href = "detail?id=" + encodeURIComponent(menu.id);
+      await CafeData.updateMenu(menu.id, {
+        name: name,
+        category: document.getElementById("category").value,
+        price: price,
+        description: document.getElementById("description").value.trim(),
+        image: image,
+        soldOut: document.getElementById("soldOut").checked
+      });
+
+      window.location.href = "detail?id=" + encodeURIComponent(menu.id);
+    } catch (err) {
+      errorEl.textContent = "메뉴 수정에 실패했습니다: " + (err.message || err);
+      errorEl.style.display = "block";
+    }
   });
 })();

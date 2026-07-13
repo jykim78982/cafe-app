@@ -1,9 +1,7 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-
-  var ORDERS_KEY = "cafeapp_orders";
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
   var basketList = document.getElementById("basketList");
   var emptyState = document.getElementById("emptyState");
@@ -22,8 +20,6 @@
   var paymentProcessing = document.getElementById("paymentProcessing");
   var paymentCancel = document.getElementById("paymentCancel");
   var paymentConfirm = document.getElementById("paymentConfirm");
-
-  CafeData.init();
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
@@ -103,39 +99,9 @@
     }
   });
 
-  function generateOrderId() {
-    return "o_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  }
-
   function getSelectedPaymentMethod() {
     var checked = document.querySelector('input[name="paymentMethod"]:checked');
     return checked ? checked.value : "카드";
-  }
-
-  function createOrder(cart) {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    var orders = [];
-    try {
-      var parsed = raw === null ? [] : JSON.parse(raw);
-      orders = Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      orders = [];
-    }
-
-    var order = {
-      id: generateOrderId(),
-      status: "pending",
-      createdAt: new Date().toISOString(),
-      total: CafeUtils.getCartTotal(),
-      paymentMethod: getSelectedPaymentMethod(),
-      items: cart.map(function (item) {
-        return { name: item.name, price: item.price, qty: item.qty };
-      })
-    };
-
-    orders.push(order);
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-    return order;
   }
 
   function openPaymentModal() {
@@ -166,8 +132,14 @@
     paymentActions.hidden = true;
     paymentProcessing.hidden = false;
 
-    setTimeout(function () {
-      var order = createOrder(cart);
+    setTimeout(async function () {
+      var order = await CafeData.createOrder({
+        total: CafeUtils.getCartTotal(),
+        paymentMethod: getSelectedPaymentMethod(),
+        items: cart.map(function (item) {
+          return { name: item.name, price: item.price, qty: item.qty };
+        })
+      });
       CafeUtils.clearCart();
       window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
     }, 900);

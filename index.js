@@ -1,9 +1,7 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-
-  CafeData.init();
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
   document.getElementById("cartCount").textContent = CafeUtils.getCartCount();
 

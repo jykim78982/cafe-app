@@ -1,13 +1,8 @@
-/* 공통 유틸리티: 장바구니(localStorage)와 포맷팅. 모든 역할별 페이지가 공통으로 사용합니다. */
+/* 공통 유틸리티: 장바구니(localStorage)와 Supabase Auth 기반 인증, 포맷팅. 모든 역할별 페이지가 공통으로 사용합니다. */
 (function (global) {
   "use strict";
 
   var CART_KEY = "cafeapp_cart";
-  var USERS_KEY = "cafeapp_users";
-  var SESSION_KEY = "cafeapp_session";
-  var ADMIN_KEY = "cafeapp_admin";
-  var ADMIN_SESSION_KEY = "cafeapp_admin_session";
-  var SEED_ADMIN = { id: "admin1", email: "admin@cafe.com", password: "admin1234", name: "사장님" };
 
   function formatPrice(value) {
     return Number(value || 0).toLocaleString() + "원";
@@ -36,101 +31,63 @@
     return "";
   }
 
-  function uid(prefix) {
-    return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  }
-
-  function readJSON(key, fallback) {
-    var raw = localStorage.getItem(key);
-    if (raw === null) return fallback;
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      return fallback;
-    }
-  }
-
-  function writeJSON(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-
-  /* ===== 회원 인증 ===== */
-  function getUsers() {
-    return readJSON(USERS_KEY, []);
-  }
-
+  /* ===== 회원 인증 (Supabase Auth) ===== */
   function signup(data) {
-    var users = getUsers();
-    if (users.some(function (u) { return u.email === data.email; })) {
-      return { error: "이미 가입된 이메일입니다." };
-    }
-    var user = { id: uid("u"), email: data.email, password: data.password, name: data.name };
-    users.push(user);
-    writeJSON(USERS_KEY, users);
-    return user;
+    return global.sb.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: { data: { name: data.name } }
+    }).then(function (res) {
+      if (res.error) return { error: res.error.message };
+      if (res.data.session) return { session: res.data.session };
+      return { needsConfirmation: true };
+    });
   }
 
   function login(email, password) {
-    var found = getUsers().find(function (u) { return u.email === email && u.password === password; });
-    if (!found) return null;
-    var session = { id: found.id, email: found.email, name: found.name };
-    writeJSON(SESSION_KEY, session);
-    return session;
+    return global.sb.auth.signInWithPassword({ email: email, password: password }).then(function (res) {
+      if (res.error) return null;
+      var session = res.data.session;
+      var role = session.user.app_metadata && session.user.app_metadata.role === "admin" ? "admin" : "customer";
+      return { session: session, role: role };
+    });
   }
 
   function logout() {
-    localStorage.removeItem(SESSION_KEY);
+    return global.sb.auth.signOut();
   }
 
   function getSession() {
-    return readJSON(SESSION_KEY, null);
+    return global.sb.auth.getSession().then(function (res) {
+      return res.data.session;
+    });
+  }
+
+  function getRole(session) {
+    return session && session.user.app_metadata && session.user.app_metadata.role === "admin" ? "admin" : "customer";
   }
 
   function requireLogin(loginPath) {
-    var session = getSession();
-    if (!session) {
-      location.href = (loginPath || rootPath() + "auth/login") + "?redirect=" + encodeURIComponent(location.pathname);
-      return null;
-    }
-    return session;
-  }
-
-  /* ===== 관리자 인증 ===== */
-  function ensureSeedAdmin() {
-    var admins = readJSON(ADMIN_KEY, null);
-    if (!admins) writeJSON(ADMIN_KEY, [SEED_ADMIN]);
-  }
-
-  function getAdmins() {
-    ensureSeedAdmin();
-    return readJSON(ADMIN_KEY, []);
-  }
-
-  function adminLogin(email, password) {
-    var found = getAdmins().find(function (a) { return a.email === email && a.password === password; });
-    if (!found) return null;
-    var session = { id: found.id, email: found.email, name: found.name };
-    writeJSON(ADMIN_SESSION_KEY, session);
-    return session;
-  }
-
-  function adminLogout() {
-    localStorage.removeItem(ADMIN_SESSION_KEY);
-  }
-
-  function getAdminSession() {
-    return readJSON(ADMIN_SESSION_KEY, null);
+    return getSession().then(function (session) {
+      if (!session) {
+        location.href = (loginPath || rootPath() + "auth/login") + "?redirect=" + encodeURIComponent(location.pathname);
+        return null;
+      }
+      return session;
+    });
   }
 
   function requireAdmin(loginPath) {
-    var session = getAdminSession();
-    if (!session) {
-      location.href = loginPath || rootPath() + "auth/login";
-      return null;
-    }
-    return session;
+    return getSession().then(function (session) {
+      if (!session || getRole(session) !== "admin") {
+        location.href = loginPath || rootPath() + "auth/login";
+        return null;
+      }
+      return session;
+    });
   }
 
+  /* ===== 장바구니 ===== */
   function getCart() {
     var raw = localStorage.getItem(CART_KEY);
     if (raw === null) return [];
@@ -191,34 +148,25 @@
 
   /* ===== 헤더 로그인/로그아웃 버튼 ===== */
   function mountAuthNav(el) {
-    if (!el) return;
-    var session = getSession();
-    var admin = getAdminSession();
+    if (!el) return Promise.resolve();
+    return getSession().then(function (session) {
+      if (!session) {
+        el.textContent = "LOGIN";
+        el.setAttribute("href", rootPath() + "auth/login");
+        return;
+      }
 
-    if (admin) {
-      el.textContent = (admin.name || "관리자") + "님 · 로그아웃";
+      var role = getRole(session);
+      var name = session.user.user_metadata && session.user.user_metadata.name;
+      el.textContent = (name || (role === "admin" ? "관리자" : "회원")) + "님 · 로그아웃";
       el.setAttribute("href", "#");
       el.addEventListener("click", function (e) {
         e.preventDefault();
-        adminLogout();
-        location.href = rootPath() + "auth/login";
+        logout().then(function () {
+          location.href = rootPath() + "auth/login";
+        });
       });
-      return;
-    }
-
-    if (session) {
-      el.textContent = (session.name || "회원") + "님 · 로그아웃";
-      el.setAttribute("href", "#");
-      el.addEventListener("click", function (e) {
-        e.preventDefault();
-        logout();
-        location.reload();
-      });
-      return;
-    }
-
-    el.textContent = "LOGIN";
-    el.setAttribute("href", rootPath() + "auth/login");
+    });
   }
 
   global.CafeUtils = {
@@ -238,10 +186,8 @@
     login: login,
     logout: logout,
     getSession: getSession,
+    getRole: getRole,
     requireLogin: requireLogin,
-    adminLogin: adminLogin,
-    adminLogout: adminLogout,
-    getAdminSession: getAdminSession,
     requireAdmin: requireAdmin,
     mountAuthNav: mountAuthNav
   };

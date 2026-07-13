@@ -1,9 +1,8 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
 
-  var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
     confirmed: "주문 확인",
@@ -19,6 +18,8 @@
     sort: "latest"
   };
 
+  var cachedOrders = [];
+
   var searchInput = document.getElementById("searchInput");
   var statusFilter = document.getElementById("statusFilter");
   var sortSelect = document.getElementById("sortSelect");
@@ -29,43 +30,6 @@
   var totalOrders = document.getElementById("totalOrders");
   var activeOrders = document.getElementById("activeOrders");
   var totalAmount = document.getElementById("totalAmount");
-
-  function readOrders() {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    if (raw === null) return [];
-
-    try {
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.map(normalizeOrder) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function normalizeOrder(order, index) {
-    var items = Array.isArray(order.items) ? order.items : [];
-    var total = Number(order.total);
-
-    if (!Number.isFinite(total)) {
-      total = items.reduce(function (sum, item) {
-        return sum + Number(item.price || 0) * Number(item.qty || item.quantity || 1);
-      }, 0);
-    }
-
-    return {
-      id: order.id || "order-" + (index + 1),
-      status: order.status || "pending",
-      createdAt: order.createdAt || order.date || "",
-      total: total,
-      items: items.map(function (item) {
-        return {
-          name: item.name || "메뉴",
-          price: Number(item.price || 0),
-          qty: Number(item.qty || item.quantity || 1)
-        };
-      })
-    };
-  }
 
   function formatDate(value) {
     var date = new Date(value);
@@ -95,7 +59,7 @@
   function getFilteredOrders() {
     var keyword = state.search.trim().toLowerCase();
 
-    return readOrders()
+    return cachedOrders
       .filter(function (order) {
         return state.status === "all" || order.status === state.status;
       })
@@ -169,10 +133,9 @@
 }
 
   function render() {
-    var allOrders = readOrders();
     var filteredOrders = getFilteredOrders();
 
-    renderSummary(allOrders);
+    renderSummary(cachedOrders);
     ordersList.innerHTML = filteredOrders.map(renderOrder).join("");
     emptyState.hidden = filteredOrders.length > 0;
     resultCount.textContent = filteredOrders.length + "개 표시 중";
@@ -194,5 +157,6 @@
   });
 
   updateCartCount();
+  cachedOrders = await CafeData.getOrders();
   render();
 })();

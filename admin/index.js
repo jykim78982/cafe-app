@@ -1,10 +1,9 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
-  var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
     confirmed: "주문 확인",
@@ -26,44 +25,6 @@
   var recentList = document.getElementById("recentList");
   var recentMeta = document.getElementById("recentMeta");
   var emptyOrders = document.getElementById("emptyOrders");
-
-  CafeData.init();
-
-  function readOrders() {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    if (raw === null) return [];
-
-    try {
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.map(normalizeOrder) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function normalizeOrder(order, index) {
-    var items = Array.isArray(order.items) ? order.items : [];
-    var total = Number(order.total);
-
-    if (!Number.isFinite(total)) {
-      total = items.reduce(function (sum, item) {
-        return sum + Number(item.price || 0) * Number(item.qty || item.quantity || 1);
-      }, 0);
-    }
-
-    return {
-      id: order.id || "order-" + (index + 1),
-      status: order.status || "pending",
-      createdAt: order.createdAt || order.date || "",
-      total: total,
-      items: items.map(function (item) {
-        return {
-          name: item.name || "메뉴",
-          qty: Number(item.qty || item.quantity || 1)
-        };
-      })
-    };
-  }
 
   function formatDate(value) {
     var date = new Date(value);
@@ -160,9 +121,9 @@
     recentMeta.textContent = recentOrders.length + "건 표시";
   }
 
-  function render() {
-    var orders = readOrders();
-    var menus = CafeData.getMenus();
+  async function render() {
+    var orders = await CafeData.getOrders();
+    var menus = await CafeData.getMenus();
 
     renderSummary(orders, menus);
     renderStatus(orders);

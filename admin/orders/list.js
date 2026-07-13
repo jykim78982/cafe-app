@@ -1,10 +1,9 @@
-(function () {
+(async function () {
   "use strict";
 
-  CafeUtils.mountAuthNav(document.getElementById("authLink"));
-  if (!CafeUtils.requireAdmin()) return;
+  await CafeUtils.mountAuthNav(document.getElementById("authLink"));
+  if (!(await CafeUtils.requireAdmin())) return;
 
-  var ORDERS_KEY = "cafeapp_orders";
   var STATUS_LABELS = {
     pending: "주문 대기",
     confirmed: "주문 확인",
@@ -20,49 +19,14 @@
     sort: "latest"
   };
 
+  var cachedOrders = [];
+
   var searchInput = document.getElementById("searchInput");
   var statusFilter = document.getElementById("statusFilter");
   var sortSelect = document.getElementById("sortSelect");
   var ordersList = document.getElementById("ordersList");
   var emptyState = document.getElementById("emptyState");
   var resultCount = document.getElementById("resultCount");
-
-  function readOrders() {
-    var raw = localStorage.getItem(ORDERS_KEY);
-    if (raw === null) return [];
-
-    try {
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed.map(normalizeOrder) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function normalizeOrder(order, index) {
-    var items = Array.isArray(order.items) ? order.items : [];
-    var total = Number(order.total);
-
-    if (!Number.isFinite(total)) {
-      total = items.reduce(function (sum, item) {
-        return sum + Number(item.price || 0) * Number(item.qty || item.quantity || 1);
-      }, 0);
-    }
-
-    return {
-      id: order.id || "order-" + (index + 1),
-      customer: order.customerName || order.customer || order.name || "방문 고객",
-      status: order.status || "pending",
-      createdAt: order.createdAt || order.date || "",
-      total: total,
-      items: items.map(function (item) {
-        return {
-          name: item.name || "메뉴",
-          qty: Number(item.qty || item.quantity || 1)
-        };
-      })
-    };
-  }
 
   function formatDate(value) {
     var date = new Date(value);
@@ -88,7 +52,7 @@
   function getFilteredOrders() {
     var keyword = state.search.trim().toLowerCase();
 
-    return readOrders()
+    return cachedOrders
       .filter(function (order) {
         return state.status === "all" || order.status === state.status;
       })
@@ -96,7 +60,6 @@
         if (!keyword) return true;
 
         return String(order.id).toLowerCase().indexOf(keyword) !== -1 ||
-          String(order.customer).toLowerCase().indexOf(keyword) !== -1 ||
           order.items.some(function (item) {
             return item.name.toLowerCase().indexOf(keyword) !== -1;
           });
@@ -115,7 +78,7 @@
     return "" +
       "<a class=\"table-row\" role=\"row\" href=\"detail?id=" + encodeURIComponent(order.id) + "\">" +
         "<span class=\"order-id\" role=\"cell\">" + CafeUtils.escapeHtml(order.id) + "</span>" +
-        "<span class=\"customer\" role=\"cell\">" + CafeUtils.escapeHtml(order.customer) + "</span>" +
+        "<span class=\"customer\" role=\"cell\">방문 고객</span>" +
         "<span class=\"status-chip " + getStatusClass(order.status) + "\" role=\"cell\">" +
           CafeUtils.escapeHtml(getStatusLabel(order.status)) +
         "</span>" +
@@ -147,5 +110,6 @@
     render();
   });
 
+  cachedOrders = await CafeData.getOrders();
   render();
 })();
