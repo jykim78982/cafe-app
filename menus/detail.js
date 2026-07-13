@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  CafeUtils.mountAuthNav(document.getElementById("authLink"));
+
   var params = new URLSearchParams(window.location.search);
   var menuId = params.get("id");
   var detailCard = document.getElementById("detailCard");

@@ -1,0 +1,4 @@
+/* auth/signup.html 전용 스타일. login.css의 .auth-* 레이아웃을 그대로 재사용하고, 여기서는 signup 고유 스타일만 추가합니다. */
+.auth-card {
+  max-width: 400px;
+}

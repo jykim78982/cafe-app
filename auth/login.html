@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 | Cafe App</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <main class="auth-page">
+    <div class="container auth-container">
+      <a class="auth-logo" href="../index.html">CAFE APP</a>
+      <div class="auth-card glass">
+        <p class="eyebrow">Login</p>
+        <h1>로그인</h1>
+        <p class="auth-desc">이메일과 비밀번호를 입력해주세요.</p>
+
+        <form id="loginForm" novalidate>
+          <p class="form-error" id="formError" hidden></p>
+          <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" autocomplete="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">로그인</button>
+        </form>
+
+        <p class="auth-hint">계정이 없으신가요? <a href="signup.html">회원가입</a></p>
+      </div>
+    </div>
+  </main>
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>
