@@ -128,7 +128,7 @@
     detailCard.innerHTML = "" +
       "<div class=\"empty-state\">" +
         "<p>주문 내역을 찾을 수 없습니다.</p>" +
-        "<a class=\"btn btn-primary\" href=\"list.html\">주문 목록으로 이동</a>" +
+        "<a class=\"btn btn-primary\" href=\"list\">주문 목록으로 이동</a>" +
       "</div>";
   }
 
@@ -185,7 +185,7 @@
           "<div class=\"total-row final\"><span>총 결제 금액</span><strong>" + CafeUtils.formatPrice(order.total) + "</strong></div>" +
         "</div>" +
         "<div class=\"detail-actions\">" +
-          "<a class=\"btn btn-outline\" href=\"list.html\">목록</a>" +
+          "<a class=\"btn btn-outline\" href=\"list\">목록</a>" +
           "<button class=\"btn btn-danger\" type=\"button\" id=\"cancelButton\"" +
             (canCancel(order) ? "" : " disabled") + ">주문 취소</button>" +
         "</div>" +

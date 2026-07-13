@@ -38,6 +38,6 @@
       image: imagePath
     });
 
-    window.location.href = "list.html";
+    window.location.href = "list";
   });
 })();

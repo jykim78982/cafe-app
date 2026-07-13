@@ -9,7 +9,7 @@
   var menu = id ? CafeData.getMenuById(id) : null;
 
   if (!menu) {
-    document.querySelector(".page").innerHTML = "<h1>메뉴를 찾을 수 없습니다</h1><a class=\"btn btn-outline\" href=\"list.html\">목록으로</a>";
+    document.querySelector(".page").innerHTML = "<h1>메뉴를 찾을 수 없습니다</h1><a class=\"btn btn-outline\" href=\"list\">목록으로</a>";
     return;
   }
 
@@ -59,6 +59,6 @@
       soldOut: document.getElementById("soldOut").checked
     });
 
-    window.location.href = "detail.html?id=" + encodeURIComponent(menu.id);
+    window.location.href = "detail?id=" + encodeURIComponent(menu.id);
   });
 })();

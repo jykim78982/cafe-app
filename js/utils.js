@@ -89,7 +89,7 @@
   function requireLogin(loginPath) {
     var session = getSession();
     if (!session) {
-      location.href = (loginPath || rootPath() + "auth/login.html") + "?redirect=" + encodeURIComponent(location.pathname);
+      location.href = (loginPath || rootPath() + "auth/login") + "?redirect=" + encodeURIComponent(location.pathname);
       return null;
     }
     return session;
@@ -125,7 +125,7 @@
   function requireAdmin(loginPath) {
     var session = getAdminSession();
     if (!session) {
-      location.href = loginPath || rootPath() + "auth/login.html";
+      location.href = loginPath || rootPath() + "auth/login";
       return null;
     }
     return session;
@@ -201,7 +201,7 @@
       el.addEventListener("click", function (e) {
         e.preventDefault();
         adminLogout();
-        location.href = rootPath() + "auth/login.html";
+        location.href = rootPath() + "auth/login";
       });
       return;
     }
@@ -218,7 +218,7 @@
     }
 
     el.textContent = "LOGIN";
-    el.setAttribute("href", rootPath() + "auth/login.html");
+    el.setAttribute("href", rootPath() + "auth/login");
   }
 
   global.CafeUtils = {

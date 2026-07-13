@@ -4,11 +4,11 @@
   CafeData.init();
 
   if (CafeUtils.getSession()) {
-    location.href = "../my/index.html";
+    location.href = "../my/";
     return;
   }
   if (CafeUtils.getAdminSession()) {
-    location.href = "../admin/index.html";
+    location.href = "../admin/";
     return;
   }
 
@@ -25,13 +25,13 @@
 
     var session = CafeUtils.login(email, password);
     if (session) {
-      location.href = redirect || "../my/index.html";
+      location.href = redirect || "../my/";
       return;
     }
 
     var adminSession = CafeUtils.adminLogin(email, password);
     if (adminSession) {
-      location.href = "../admin/index.html";
+      location.href = "../admin/";
       return;
     }
 

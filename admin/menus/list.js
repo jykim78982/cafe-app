@@ -70,7 +70,7 @@
           '<div class="category">' + CafeUtils.escapeHtml(m.category) + "</div>" +
           '<div class="price">' + CafeUtils.formatPrice(m.price) + "</div>" +
           '<div class="actions">' +
-            '<a class="btn btn-outline" href="detail.html?id=' + encodeURIComponent(m.id) + '">상세</a>' +
+            '<a class="btn btn-outline" href="detail?id=' + encodeURIComponent(m.id) + '">상세</a>' +
             '<button type="button" class="btn btn-outline toggle-soldout" data-id="' + m.id + '">' + (m.soldOut ? "품절 해제" : "품절 처리") + "</button>" +
             '<button type="button" class="btn btn-danger delete-menu" data-id="' + m.id + '">삭제</button>' +
           "</div>" +
@@ -101,7 +101,7 @@
     if (event.target.closest("a, button")) return;
     var card = event.target.closest("[data-id]");
     if (!card) return;
-    location.href = "detail.html?id=" + encodeURIComponent(card.dataset.id);
+    location.href = "detail?id=" + encodeURIComponent(card.dataset.id);
   });
 
   renderTabs();
