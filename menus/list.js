@@ -92,13 +92,13 @@
 
     return "" +
       "<article class=\"menu-card" + (menu.soldOut ? " is-soldout" : "") + "\">" +
-        "<a class=\"menu-visual\" href=\"detail.html?id=" + encodeURIComponent(menu.id) + "\">" +
+        "<a class=\"menu-visual\" href=\"detail?id=" + encodeURIComponent(menu.id) + "\">" +
           badge +
           createImageMarkup(menu) +
         "</a>" +
         "<div class=\"menu-body\">" +
           "<span class=\"category-label\">" + CafeUtils.escapeHtml(menu.category) + "</span>" +
-          "<a href=\"detail.html?id=" + encodeURIComponent(menu.id) + "\"><h3>" + CafeUtils.escapeHtml(menu.name) + "</h3></a>" +
+          "<a href=\"detail?id=" + encodeURIComponent(menu.id) + "\"><h3>" + CafeUtils.escapeHtml(menu.name) + "</h3></a>" +
           "<p class=\"menu-desc\">" + CafeUtils.escapeHtml(menu.description) + "</p>" +
           "<strong class=\"price\">" + CafeUtils.formatPrice(menu.price) + "</strong>" +
           "<div class=\"menu-actions\">" +
@@ -150,7 +150,7 @@
       var buyMenu = CafeData.getMenuById(buyButton.dataset.buyId);
       if (!buyMenu || buyMenu.soldOut) return;
       CafeUtils.addToCart({ menuId: buyMenu.id, name: buyMenu.name, price: buyMenu.price, image: buyMenu.image, qty: 1 });
-      location.href = "../basket/list.html";
+      location.href = "../basket/list";
       return;
     }
 

@@ -42,7 +42,7 @@
     detailCard.innerHTML = "" +
       "<div class=\"empty-state\">" +
         "<p>메뉴를 찾을 수 없습니다.</p>" +
-        "<a class=\"btn btn-primary\" href=\"list.html\">메뉴 목록으로 이동</a>" +
+        "<a class=\"btn btn-primary\" href=\"list\">메뉴 목록으로 이동</a>" +
       "</div>";
   }
 
@@ -125,7 +125,7 @@
         image: menu.image,
         qty: quantity
       });
-      location.href = "../basket/list.html";
+      location.href = "../basket/list";
     });
   }
 

@@ -125,7 +125,7 @@
     detailCard.innerHTML = "" +
       "<div class=\"empty-state\">" +
         "<p>주문 ID에 해당하는 주문을 찾을 수 없습니다.</p>" +
-        "<a class=\"btn btn-primary\" href=\"list.html\">주문 목록으로 이동</a>" +
+        "<a class=\"btn btn-primary\" href=\"list\">주문 목록으로 이동</a>" +
       "</div>";
   }
 

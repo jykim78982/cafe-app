@@ -4,7 +4,7 @@
   CafeData.init();
 
   if (CafeUtils.getSession()) {
-    location.href = "../my/index.html";
+    location.href = "../my/";
     return;
   }
 
@@ -39,6 +39,6 @@
     }
 
     CafeUtils.login(email, password);
-    location.href = "../my/index.html";
+    location.href = "../my/";
   });
 })();

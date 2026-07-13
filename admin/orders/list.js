@@ -113,7 +113,7 @@
 
   function renderOrder(order) {
     return "" +
-      "<a class=\"table-row\" role=\"row\" href=\"detail.html?id=" + encodeURIComponent(order.id) + "\">" +
+      "<a class=\"table-row\" role=\"row\" href=\"detail?id=" + encodeURIComponent(order.id) + "\">" +
         "<span class=\"order-id\" role=\"cell\">" + CafeUtils.escapeHtml(order.id) + "</span>" +
         "<span class=\"customer\" role=\"cell\">" + CafeUtils.escapeHtml(order.customer) + "</span>" +
         "<span class=\"status-chip " + getStatusClass(order.status) + "\" role=\"cell\">" +

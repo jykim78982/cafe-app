@@ -169,7 +169,7 @@
     setTimeout(function () {
       var order = createOrder(cart);
       CafeUtils.clearCart();
-      window.location.href = "../orders/detail.html?id=" + encodeURIComponent(order.id);
+      window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
     }, 900);
   });
 
