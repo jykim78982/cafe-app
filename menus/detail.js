@@ -10,6 +10,9 @@
   var toast = document.getElementById("toast");
   var toastTimer = null;
   var quantity = 1;
+  var cartModal = document.getElementById("cartModal");
+  var cartModalDesc = document.getElementById("cartModalDesc");
+  var modalContinueBtn = document.getElementById("modalContinueBtn");
 
   CafeData.init();
 
@@ -77,8 +80,12 @@
               "<span>합계</span>" +
               "<strong id=\"totalPrice\">" + CafeUtils.formatPrice(menu.price) + "</strong>" +
             "</div>" +
-            "<button class=\"btn btn-primary btn-block\" type=\"button\" id=\"cartButton\"" +
-              (menu.soldOut ? " disabled" : "") + ">장바구니 담기</button>" +
+            "<div class=\"order-actions\">" +
+              "<button class=\"btn btn-outline\" type=\"button\" id=\"cartButton\"" +
+                (menu.soldOut ? " disabled" : "") + ">장바구니 담기</button>" +
+              "<button class=\"btn btn-primary\" type=\"button\" id=\"buyButton\"" +
+                (menu.soldOut ? " disabled" : "") + ">바로 주문</button>" +
+            "</div>" +
           "</div>" +
         "</div>" +
       "</div>";
@@ -104,9 +111,31 @@
         qty: quantity
       });
       updateCartCount();
-      showToast("'" + menu.name + "' " + quantity + "개를 장바구니에 담았습니다.");
+      cartModalDesc.textContent = "'" + menu.name + "' " + quantity + "개를 장바구니에 담았습니다.";
+      cartModal.hidden = false;
+    });
+
+    document.getElementById("buyButton").addEventListener("click", function () {
+      if (menu.soldOut) return;
+
+      CafeUtils.addToCart({
+        menuId: menu.id,
+        name: menu.name,
+        price: menu.price,
+        image: menu.image,
+        qty: quantity
+      });
+      location.href = "../basket/list.html";
     });
   }
+
+  modalContinueBtn.addEventListener("click", function () {
+    cartModal.hidden = true;
+  });
+
+  cartModal.addEventListener("click", function (event) {
+    if (event.target === cartModal) cartModal.hidden = true;
+  });
 
   var menu = CafeData.getMenuById(menuId);
   updateCartCount();
