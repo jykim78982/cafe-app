@@ -206,9 +206,9 @@ cafe-app/
 - [x] `menus/detail.html/css/js` — 이미지+정보 2단 레이아웃으로 리디자인 (기존 헤더 내비게이션 스타일은 유지)
 - [x] `menus/detail.html/css/js` — 담기 완료 모달, 바로 주문 버튼 추가
 
-### 12단계: 고객 - 결제 수단 선택 (audio-shop 참고)
+### 12단계: 고객 - 결제 수단 선택 (audio-shop 참고) ✅
 
-- [ ] `basket/list.html/css/js` — 결제 시 결제 수단 선택 UI 추가 (카드 / 간편결제: 네이버페이, 카카오페이)
+- [x] `basket/list.html/css/js` — 결제 시 결제 수단 선택 UI 추가 (카드 / 간편결제: 네이버페이, 카카오페이)
 
 ### 13단계: 관리자 - 메뉴/주문 관리 UX 개선 (audio-shop 참고)
 
