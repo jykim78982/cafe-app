@@ -279,7 +279,7 @@
 
       var role = getRole(session);
       var name = session.user.user_metadata && session.user.user_metadata.name;
-      el.textContent = (name || (role === "admin" ? "관리자" : "회원")) + "님 · 로그아웃";
+      el.textContent = (name || (role === "admin" ? "관리자" : "회원")) + "님 · LOGOUT";
       el.setAttribute("href", "#");
       el.addEventListener("click", function (e) {
         e.preventDefault();
