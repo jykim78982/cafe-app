@@ -425,6 +425,54 @@
   background: #02a94c;
 }
 
+.kakao-approval {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing);
+  border: 1px solid #fee500;
+  border-radius: var(--radius);
+  background: rgba(254, 229, 0, 0.12);
+  text-align: center;
+}
+
+.kakao-approval[hidden] {
+  display: none;
+}
+
+.kakao-approval-brand {
+  justify-self: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  background: #fee500;
+  color: #391b1b;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.kakao-approval-desc {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.kakao-approval-amount {
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.kakao-approve-btn {
+  background: #fee500;
+  color: #391b1b;
+  font-weight: 800;
+}
+
+.kakao-approve-btn:hover {
+  background: #f5dc00;
+}
+
 .payment-processing {
   display: flex;
   align-items: center;
