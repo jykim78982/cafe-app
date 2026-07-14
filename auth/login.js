@@ -3,7 +3,7 @@
 
   var session = await CafeUtils.getSession();
   if (session) {
-    location.href = CafeUtils.getRole(session) === "admin" ? "../admin/" : "../my/";
+    location.href = CafeUtils.getRole(session) === "admin" ? "../admin/" : "../menus/list";
     return;
   }
 
@@ -31,6 +31,6 @@
       return;
     }
 
-    location.href = result.role === "admin" ? "../admin/" : (redirect || "../my/");
+    location.href = result.role === "admin" ? "../admin/" : (redirect || "../menus/list");
   });
 })();
