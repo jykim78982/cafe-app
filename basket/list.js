@@ -29,6 +29,14 @@
   var kakaoApprovalAmount = document.getElementById("kakaoApprovalAmount");
   var kakaoApproveBtn = document.getElementById("kakaoApproveBtn");
   var kakaoApprovalCancel = document.getElementById("kakaoApprovalCancel");
+  var cardApproval = document.getElementById("cardApproval");
+  var cardApprovalAmount = document.getElementById("cardApprovalAmount");
+  var cardApprovalError = document.getElementById("cardApprovalError");
+  var cardApproveBtn = document.getElementById("cardApproveBtn");
+  var cardApprovalCancel = document.getElementById("cardApprovalCancel");
+  var cardNumberInput = document.getElementById("cardNumberInput");
+  var cardExpiryInput = document.getElementById("cardExpiryInput");
+  var cardCvcInput = document.getElementById("cardCvcInput");
 
   var mockApprovals = {
     "네이버페이": { panel: naverApproval, amount: naverApprovalAmount, processingText: "네이버페이로 결제를 처리하고 있습니다..." },
@@ -127,8 +135,14 @@
     paymentActions.hidden = false;
     naverApproval.hidden = true;
     kakaoApproval.hidden = true;
+    cardApproval.hidden = true;
     paymentProcessing.hidden = true;
     paymentOverlay.hidden = false;
+
+    cardNumberInput.value = "";
+    cardExpiryInput.value = "";
+    cardCvcInput.value = "";
+    cardApprovalError.hidden = true;
   }
 
   function closePaymentModal() {
@@ -162,6 +176,14 @@
     if (cart.length === 0) return;
 
     var method = getSelectedPaymentMethod();
+
+    if (method === "카드") {
+      cardApprovalAmount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
+      paymentActions.hidden = true;
+      cardApproval.hidden = false;
+      return;
+    }
+
     var approval = mockApprovals[method];
 
     if (approval) {
@@ -175,6 +197,46 @@
     paymentProcessingText.textContent = "결제를 처리하고 있습니다...";
     paymentProcessing.hidden = false;
     finishOrder(method);
+  });
+
+  cardNumberInput.addEventListener("input", function (event) {
+    var digits = event.target.value.replace(/\D/g, "").slice(0, 16);
+    event.target.value = digits.replace(/(.{4})(?=.)/g, "$1 ");
+  });
+
+  cardExpiryInput.addEventListener("input", function (event) {
+    var digits = event.target.value.replace(/\D/g, "").slice(0, 4);
+    event.target.value = digits.length > 2 ? digits.slice(0, 2) + "/" + digits.slice(2) : digits;
+  });
+
+  cardCvcInput.addEventListener("input", function (event) {
+    event.target.value = event.target.value.replace(/\D/g, "").slice(0, 3);
+  });
+
+  function isValidCard() {
+    var digits = cardNumberInput.value.replace(/\D/g, "");
+    var cvcDigits = cardCvcInput.value.replace(/\D/g, "");
+    return digits.length === 16 &&
+      /^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExpiryInput.value) &&
+      cvcDigits.length === 3;
+  }
+
+  cardApprovalCancel.addEventListener("click", function () {
+    cardApproval.hidden = true;
+    paymentActions.hidden = false;
+  });
+
+  cardApproveBtn.addEventListener("click", function () {
+    if (!isValidCard()) {
+      cardApprovalError.hidden = false;
+      return;
+    }
+
+    cardApprovalError.hidden = true;
+    cardApproval.hidden = true;
+    paymentProcessingText.textContent = "카드로 결제를 처리하고 있습니다...";
+    paymentProcessing.hidden = false;
+    finishOrder("카드");
   });
 
   naverApprovalCancel.addEventListener("click", function () {
