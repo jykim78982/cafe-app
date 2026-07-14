@@ -18,8 +18,13 @@
   var paymentAmount = document.getElementById("paymentAmount");
   var paymentActions = document.getElementById("paymentActions");
   var paymentProcessing = document.getElementById("paymentProcessing");
+  var paymentProcessingText = document.getElementById("paymentProcessingText");
   var paymentCancel = document.getElementById("paymentCancel");
   var paymentConfirm = document.getElementById("paymentConfirm");
+  var naverApproval = document.getElementById("naverApproval");
+  var naverApprovalAmount = document.getElementById("naverApprovalAmount");
+  var naverApproveBtn = document.getElementById("naverApproveBtn");
+  var naverApprovalCancel = document.getElementById("naverApprovalCancel");
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
@@ -111,12 +116,29 @@
     paymentCount.textContent = CafeUtils.getCartCount() + "개";
     paymentAmount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
     paymentActions.hidden = false;
+    naverApproval.hidden = true;
     paymentProcessing.hidden = true;
     paymentOverlay.hidden = false;
   }
 
   function closePaymentModal() {
     paymentOverlay.hidden = true;
+  }
+
+  function finishOrder(paymentMethod) {
+    var cart = CafeUtils.getCart();
+
+    setTimeout(async function () {
+      var order = await CafeData.createOrder({
+        total: CafeUtils.getCartTotal(),
+        paymentMethod: paymentMethod,
+        items: cart.map(function (item) {
+          return { name: item.name, price: item.price, qty: item.qty };
+        })
+      });
+      CafeUtils.clearCart();
+      window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
+    }, 900);
   }
 
   paymentCancel.addEventListener("click", closePaymentModal);
@@ -129,20 +151,31 @@
     var cart = CafeUtils.getCart();
     if (cart.length === 0) return;
 
-    paymentActions.hidden = true;
-    paymentProcessing.hidden = false;
+    var method = getSelectedPaymentMethod();
 
-    setTimeout(async function () {
-      var order = await CafeData.createOrder({
-        total: CafeUtils.getCartTotal(),
-        paymentMethod: getSelectedPaymentMethod(),
-        items: cart.map(function (item) {
-          return { name: item.name, price: item.price, qty: item.qty };
-        })
-      });
-      CafeUtils.clearCart();
-      window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
-    }, 900);
+    if (method === "네이버페이") {
+      naverApprovalAmount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
+      paymentActions.hidden = true;
+      naverApproval.hidden = false;
+      return;
+    }
+
+    paymentActions.hidden = true;
+    paymentProcessingText.textContent = "결제를 처리하고 있습니다...";
+    paymentProcessing.hidden = false;
+    finishOrder(method);
+  });
+
+  naverApprovalCancel.addEventListener("click", function () {
+    naverApproval.hidden = true;
+    paymentActions.hidden = false;
+  });
+
+  naverApproveBtn.addEventListener("click", function () {
+    naverApproval.hidden = true;
+    paymentProcessingText.textContent = "네이버페이로 결제를 처리하고 있습니다...";
+    paymentProcessing.hidden = false;
+    finishOrder("네이버페이");
   });
 
   checkoutButton.addEventListener("click", openPaymentModal);
