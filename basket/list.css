@@ -349,6 +349,18 @@
   color: #fff;
 }
 
+.payment-option--naver:has(input:checked) {
+  border-color: #03c75a;
+  background: #03c75a;
+  color: #fff;
+}
+
+.payment-option--kakao:has(input:checked) {
+  border-color: #fee500;
+  background: #fee500;
+  color: #391b1b;
+}
+
 .payment-option:has(input:focus-visible) {
   outline: 2px solid rgba(217, 140, 74, 0.45);
   outline-offset: 2px;
@@ -363,6 +375,54 @@
 
 .payment-actions[hidden] {
   display: none;
+}
+
+.naver-approval {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing);
+  border: 1px solid #03c75a;
+  border-radius: var(--radius);
+  background: rgba(3, 199, 90, 0.06);
+  text-align: center;
+}
+
+.naver-approval[hidden] {
+  display: none;
+}
+
+.naver-approval-brand {
+  justify-self: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  background: #03c75a;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.naver-approval-desc {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.naver-approval-amount {
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.naver-approve-btn {
+  background: #03c75a;
+  color: #fff;
+  font-weight: 800;
+}
+
+.naver-approve-btn:hover {
+  background: #02a94c;
 }
 
 .payment-processing {
