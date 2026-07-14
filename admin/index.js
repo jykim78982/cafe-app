@@ -106,7 +106,7 @@
       return "" +
         "<article class=\"recent-row\">" +
           "<div>" +
-            "<div class=\"recent-id\">주문번호 " + CafeUtils.escapeHtml(order.id) + "</div>" +
+            "<div class=\"recent-id\">주문번호 " + CafeUtils.escapeHtml(order.orderNo) + "</div>" +
             "<p class=\"recent-date\">" + CafeUtils.escapeHtml(formatDate(order.createdAt)) + "</p>" +
             "<p class=\"recent-items\">" + CafeUtils.escapeHtml(itemText) + "</p>" +
             "<span class=\"status-chip status-" + CafeUtils.escapeHtml(order.status) + "\">" +

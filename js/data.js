@@ -142,6 +142,7 @@
     if (!row) return null;
     return {
       id: row.id,
+      orderNo: row.order_no,
       userId: row.user_id,
       status: row.status,
       paymentMethod: row.payment_method,

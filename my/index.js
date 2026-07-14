@@ -46,7 +46,7 @@
       '<article class="recent-card glass">' +
         '<div class="recent-top">' +
           "<div>" +
-            '<p class="recent-id">주문번호 ' + CafeUtils.escapeHtml(order.id) + "</p>" +
+            '<p class="recent-id">주문번호 ' + CafeUtils.escapeHtml(order.orderNo) + "</p>" +
             '<p class="recent-date">' + CafeUtils.escapeHtml(formatDate(order.createdAt)) + "</p>" +
           "</div>" +
           '<span class="status-chip ' + getStatusClass(order.status) + '">' +

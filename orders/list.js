@@ -66,7 +66,7 @@
       .filter(function (order) {
         if (!keyword) return true;
 
-        return String(order.id).toLowerCase().indexOf(keyword) !== -1 ||
+        return String(order.orderNo).toLowerCase().indexOf(keyword) !== -1 ||
           order.items.some(function (item) {
             return item.name.toLowerCase().indexOf(keyword) !== -1;
           });
@@ -113,7 +113,7 @@
     "<article class=\"order-card glass\">" +
       "<div class=\"order-top\">" +
         "<div>" +
-          "<p class=\"order-id\">주문번호 " + CafeUtils.escapeHtml(order.id) + "</p>" +
+          "<p class=\"order-id\">주문번호 " + CafeUtils.escapeHtml(order.orderNo) + "</p>" +
           "<p class=\"order-date\">" + CafeUtils.escapeHtml(formatDate(order.createdAt)) + "</p>" +
         "</div>" +
         "<span class=\"status-chip " + getStatusClass(order.status) + "\">" +

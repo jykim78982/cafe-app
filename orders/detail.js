@@ -93,7 +93,7 @@
         "<div class=\"detail-top\">" +
           "<div>" +
             "<p class=\"eyebrow\">Order Detail</p>" +
-            "<h1>주문번호 " + CafeUtils.escapeHtml(order.id) + "</h1>" +
+            "<h1>주문번호 " + CafeUtils.escapeHtml(order.orderNo) + "</h1>" +
             "<p class=\"order-date\">주문일시 " + CafeUtils.escapeHtml(formatDate(order.createdAt)) + "</p>" +
           "</div>" +
           "<span class=\"status-chip " + getStatusClass(order.status) + "\">" +

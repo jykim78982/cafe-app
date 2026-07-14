@@ -59,7 +59,7 @@
       .filter(function (order) {
         if (!keyword) return true;
 
-        return String(order.id).toLowerCase().indexOf(keyword) !== -1 ||
+        return String(order.orderNo).toLowerCase().indexOf(keyword) !== -1 ||
           order.items.some(function (item) {
             return item.name.toLowerCase().indexOf(keyword) !== -1;
           });
@@ -77,7 +77,7 @@
   function renderOrder(order) {
     return "" +
       "<a class=\"table-row\" role=\"row\" href=\"detail?id=" + encodeURIComponent(order.id) + "\">" +
-        "<span class=\"order-id\" role=\"cell\">" + CafeUtils.escapeHtml(order.id) + "</span>" +
+        "<span class=\"order-id\" role=\"cell\">" + CafeUtils.escapeHtml(order.orderNo) + "</span>" +
         "<span class=\"customer\" role=\"cell\">방문 고객</span>" +
         "<span class=\"status-chip " + getStatusClass(order.status) + "\" role=\"cell\">" +
           CafeUtils.escapeHtml(getStatusLabel(order.status)) +
