@@ -243,9 +243,17 @@ h1 {
   .admin-header-inner,
   .detail-top,
   .section-heading {
-    align-items: stretch;
     display: flex;
     flex-direction: column;
+  }
+
+  .detail-top,
+  .section-heading {
+    align-items: stretch;
+  }
+
+  .admin-header-inner {
+    align-items: center;
   }
 
   .info-grid {

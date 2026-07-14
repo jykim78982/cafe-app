@@ -314,11 +314,18 @@ a:focus-visible {
   .section-heading,
   .order-top,
   .order-footer {
-    align-items: stretch;
     flex-direction: column;
   }
 
+  .hero,
+  .section-heading,
+  .order-top,
+  .order-footer {
+    align-items: stretch;
+  }
+
   .header-inner {
+    align-items: center;
     gap: 8px;
     padding: 12px 0;
     min-height: 0;

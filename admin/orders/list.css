@@ -201,9 +201,16 @@ a.table-row:hover {
 @media (max-width: 820px) {
   .admin-header-inner,
   .panel-heading {
-    align-items: stretch;
     display: flex;
     flex-direction: column;
+  }
+
+  .panel-heading {
+    align-items: stretch;
+  }
+
+  .admin-header-inner {
+    align-items: center;
   }
 
   .toolbar {

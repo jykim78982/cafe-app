@@ -237,9 +237,17 @@
   .admin-header-inner,
   .hero,
   .panel-heading {
-    align-items: stretch;
     display: flex;
     flex-direction: column;
+  }
+
+  .hero,
+  .panel-heading {
+    align-items: stretch;
+  }
+
+  .admin-header-inner {
+    align-items: center;
   }
 
   .summary-grid,

@@ -198,7 +198,7 @@
 
 @media (max-width: 760px) {
   .header-inner {
-    align-items: stretch;
+    align-items: center;
     flex-direction: column;
     gap: 8px;
     padding: 12px 0;

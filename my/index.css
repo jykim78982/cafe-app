@@ -255,11 +255,17 @@
   .section-heading,
   .recent-top,
   .recent-footer {
-    align-items: stretch;
     flex-direction: column;
   }
 
+  .section-heading,
+  .recent-top,
+  .recent-footer {
+    align-items: stretch;
+  }
+
   .header-inner {
+    align-items: center;
     gap: 8px;
     padding: 12px 0;
     min-height: 0;
