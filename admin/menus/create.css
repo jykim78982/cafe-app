@@ -167,6 +167,17 @@
   -webkit-user-drag: none;
 }
 
+.crop-picker-zoom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-muted);
+}
+
+.crop-picker-zoom-range {
+  flex: 1;
+}
+
 .crop-picker-actions {
   display: flex;
   justify-content: flex-end;

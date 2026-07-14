@@ -10,23 +10,33 @@
   var imagePreview = document.getElementById("image-preview");
   var selectedFile = null;
   var imagePosition = "50% 50%";
+  var imageZoom = 1;
+
+  function applyPreviewStyle(img) {
+    img.style.objectPosition = imagePosition;
+    img.style.transformOrigin = imagePosition;
+    img.style.transform = "scale(" + imageZoom + ")";
+  }
 
   imageInput.addEventListener("change", function () {
     var file = imageInput.files && imageInput.files[0];
     selectedFile = file || null;
     imagePosition = "50% 50%";
+    imageZoom = 1;
     imagePreview.innerHTML = file
-      ? '<img src="' + URL.createObjectURL(file) + '" alt="선택한 메뉴 사진 미리보기" style="object-position:' + imagePosition + '">'
+      ? '<img src="' + URL.createObjectURL(file) + '" alt="선택한 메뉴 사진 미리보기">'
       : "이미지 없음";
+    if (file) applyPreviewStyle(imagePreview.querySelector("img"));
   });
 
   imagePreview.addEventListener("click", async function (event) {
     var img = event.target.closest("img");
     if (!img) return;
-    var result = await CafeUtils.openCropPicker(img.src, imagePosition);
+    var result = await CafeUtils.openCropPicker(img.src, imagePosition, imageZoom);
     if (result) {
-      imagePosition = result;
-      img.style.objectPosition = imagePosition;
+      imagePosition = result.position;
+      imageZoom = result.zoom;
+      applyPreviewStyle(img);
     }
   });
 
@@ -50,7 +60,8 @@
         price: price,
         description: document.getElementById("description").value.trim(),
         image: image,
-        imagePosition: imagePosition
+        imagePosition: imagePosition,
+        imageZoom: imageZoom
       });
 
       window.location.href = "list";

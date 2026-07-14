@@ -14,7 +14,7 @@
   }
 
   var image = menu.image
-    ? '<img src="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(menu.image)) + '" alt="' + CafeUtils.escapeHtml(menu.name) + '" style="object-position:' + CafeUtils.escapeHtml(menu.imagePosition || "50% 50%") + '">'
+    ? '<img src="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(menu.image)) + '" alt="' + CafeUtils.escapeHtml(menu.name) + '" style="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageStyle(menu.imagePosition, menu.imageZoom)) + '">'
     : "";
 
   detailEl.innerHTML =

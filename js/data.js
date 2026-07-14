@@ -20,6 +20,7 @@
       description: row.description,
       image: row.image,
       imagePosition: row.image_position || "50% 50%",
+      imageZoom: row.image_zoom || 1,
       soldOut: row.sold_out,
       createdAt: row.created_at
     };
@@ -47,6 +48,7 @@
       description: menu.description,
       image: menu.image,
       image_position: menu.imagePosition || "50% 50%",
+      image_zoom: menu.imageZoom || 1,
       sold_out: menu.soldOut || false
     }).select().single().then(function (res) {
       if (res.error) throw res.error;
@@ -62,6 +64,7 @@
     if (updates.description !== undefined) payload.description = updates.description;
     if (updates.image !== undefined) payload.image = updates.image;
     if (updates.imagePosition !== undefined) payload.image_position = updates.imagePosition;
+    if (updates.imageZoom !== undefined) payload.image_zoom = updates.imageZoom;
     if (updates.soldOut !== undefined) payload.sold_out = updates.soldOut;
 
     return global.sb.from("menus").update(payload).eq("id", id).select().maybeSingle().then(function (res) {

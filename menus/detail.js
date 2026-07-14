@@ -33,7 +33,7 @@
     }
 
     return "<img src=\"" + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(menu.image)) + "\" alt=\"" +
-      CafeUtils.escapeHtml(menu.name) + "\" style=\"object-position:" + CafeUtils.escapeHtml(menu.imagePosition || "50% 50%") + "\">";
+      CafeUtils.escapeHtml(menu.name) + "\" style=\"" + CafeUtils.escapeHtml(CafeUtils.getMenuImageStyle(menu.imagePosition, menu.imageZoom)) + "\">";
   }
 
   function renderNotFound() {
@@ -107,6 +107,7 @@
         price: menu.price,
         image: menu.image,
         imagePosition: menu.imagePosition,
+        imageZoom: menu.imageZoom,
         qty: quantity
       });
       updateCartCount();
@@ -123,6 +124,7 @@
         price: menu.price,
         image: menu.image,
         imagePosition: menu.imagePosition,
+        imageZoom: menu.imageZoom,
         qty: quantity
       });
       location.href = "../basket/list";

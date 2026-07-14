@@ -14,13 +14,24 @@
     return div.innerHTML;
   }
 
-  /* 사진 크롭 위치 선택 모달. 프레임 안에서 사진을 드래그해 보여줄 영역을 정하고,
-     "X% Y%" 형태의 object-position 값을 Promise로 반환합니다(취소 시 null). */
-  function openCropPicker(imageSrc, initialPosition) {
+  /* 사진 크롭 위치·확대 선택 모달. 프레임 안에서 사진을 드래그해 보여줄 영역을 정하고
+     슬라이더로 확대할 수 있습니다. { position: "X% Y%", zoom: Number } 형태로 Promise를
+     반환합니다(취소 시 null). */
+  function openCropPicker(imageSrc, initialPosition, initialZoom) {
     return new Promise(function (resolve) {
       var FRAME = 320;
-      var maxX = 0, maxY = 0, offsetX = 0, offsetY = 0;
-      var dragging = false, startX = 0, startY = 0, startOffsetX = 0, startOffsetY = 0;
+      var MIN_ZOOM = 1, MAX_ZOOM = 4;
+      var naturalW = 0, naturalH = 0, coverScale = 1;
+      var maxX = 0, maxY = 0;
+      var zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, initialZoom || 1));
+
+      var initParts = (initialPosition || "50% 50%").split(" ");
+      var px = parseFloat(initParts[0]);
+      var py = parseFloat(initParts[1]);
+      if (isNaN(px)) px = 50;
+      if (isNaN(py)) py = 50;
+
+      var dragging = false, startX = 0, startY = 0, startPx = 0, startPy = 0;
 
       var overlay = document.createElement("div");
       overlay.className = "crop-picker-overlay";
@@ -28,6 +39,11 @@
         '<div class="crop-picker-modal">' +
           '<p class="crop-picker-title">보여줄 영역을 드래그로 선택하세요</p>' +
           '<div class="crop-picker-frame"><img class="crop-picker-img" alt="크롭 대상 이미지"></div>' +
+          '<div class="crop-picker-zoom">' +
+            '<span aria-hidden="true">－</span>' +
+            '<input type="range" class="crop-picker-zoom-range" min="' + MIN_ZOOM + '" max="' + MAX_ZOOM + '" step="0.1" value="' + zoom + '">' +
+            '<span aria-hidden="true">＋</span>' +
+          "</div>" +
           '<div class="crop-picker-actions">' +
             '<button type="button" class="btn btn-outline" data-action="cancel">취소</button>' +
             '<button type="button" class="btn btn-primary" data-action="confirm">적용</button>' +
@@ -37,8 +53,18 @@
 
       var frame = overlay.querySelector(".crop-picker-frame");
       var img = overlay.querySelector(".crop-picker-img");
+      var zoomRange = overlay.querySelector(".crop-picker-zoom-range");
 
-      function applyTransform() {
+      function render() {
+        var scale = coverScale * zoom;
+        var scaledW = naturalW * scale;
+        var scaledH = naturalH * scale;
+        img.style.width = scaledW + "px";
+        img.style.height = scaledH + "px";
+        maxX = Math.max(0, scaledW - FRAME);
+        maxY = Math.max(0, scaledH - FRAME);
+        var offsetX = maxX * (px / 100);
+        var offsetY = maxY * (py / 100);
         img.style.transform = "translate(" + (-offsetX) + "px, " + (-offsetY) + "px)";
       }
 
@@ -46,25 +72,31 @@
         dragging = true;
         startX = e.clientX;
         startY = e.clientY;
-        startOffsetX = offsetX;
-        startOffsetY = offsetY;
+        startPx = px;
+        startPy = py;
       }
 
       function onPointerMove(e) {
         if (!dragging) return;
-        offsetX = Math.min(maxX, Math.max(0, startOffsetX - (e.clientX - startX)));
-        offsetY = Math.min(maxY, Math.max(0, startOffsetY - (e.clientY - startY)));
-        applyTransform();
+        px = maxX === 0 ? 50 : Math.min(100, Math.max(0, startPx - ((e.clientX - startX) / maxX) * 100));
+        py = maxY === 0 ? 50 : Math.min(100, Math.max(0, startPy - ((e.clientY - startY) / maxY) * 100));
+        render();
       }
 
       function onPointerUp() {
         dragging = false;
       }
 
+      function onZoomInput() {
+        zoom = Number(zoomRange.value);
+        render();
+      }
+
       function cleanup(result) {
         frame.removeEventListener("pointerdown", onPointerDown);
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
+        zoomRange.removeEventListener("input", onZoomInput);
         document.body.removeChild(overlay);
         resolve(result);
       }
@@ -76,32 +108,24 @@
         cleanup(null);
       });
       overlay.querySelector('[data-action="confirm"]').addEventListener("click", function () {
-        var x = maxX === 0 ? 50 : Math.round((offsetX / maxX) * 100);
-        var y = maxY === 0 ? 50 : Math.round((offsetY / maxY) * 100);
-        cleanup(x + "% " + y + "%");
+        cleanup({
+          position: Math.round(px) + "% " + Math.round(py) + "%",
+          zoom: Math.round(zoom * 10) / 10
+        });
       });
 
       img.addEventListener("load", function () {
-        var scale = Math.max(FRAME / img.naturalWidth, FRAME / img.naturalHeight);
-        var scaledW = img.naturalWidth * scale;
-        var scaledH = img.naturalHeight * scale;
-        img.style.width = scaledW + "px";
-        img.style.height = scaledH + "px";
-        maxX = Math.max(0, scaledW - FRAME);
-        maxY = Math.max(0, scaledH - FRAME);
-
-        var parts = (initialPosition || "50% 50%").split(" ");
-        var px = parseFloat(parts[0]);
-        var py = parseFloat(parts[1]);
-        offsetX = maxX * ((isNaN(px) ? 50 : px) / 100);
-        offsetY = maxY * ((isNaN(py) ? 50 : py) / 100);
-        applyTransform();
+        naturalW = img.naturalWidth;
+        naturalH = img.naturalHeight;
+        coverScale = Math.max(FRAME / naturalW, FRAME / naturalH);
+        render();
       });
       img.src = imageSrc;
 
       frame.addEventListener("pointerdown", onPointerDown);
       window.addEventListener("pointermove", onPointerMove);
       window.addEventListener("pointerup", onPointerUp);
+      zoomRange.addEventListener("input", onZoomInput);
     });
   }
 
@@ -112,6 +136,12 @@
     if (location.pathname.indexOf("/admin/menus/") !== -1) return "../../" + image;
     if (location.pathname.indexOf("/menus/") !== -1 || location.pathname.indexOf("/basket/") !== -1 || location.pathname.indexOf("/orders/") !== -1) return "../" + image;
     return image;
+  }
+
+  function getMenuImageStyle(imagePosition, imageZoom) {
+    var position = imagePosition || "50% 50%";
+    var zoom = imageZoom || 1;
+    return "object-position:" + position + ";transform-origin:" + position + ";transform:scale(" + zoom + ")";
   }
 
   function rootPath() {
@@ -264,6 +294,7 @@
     formatPrice: formatPrice,
     escapeHtml: escapeHtml,
     getMenuImageSrc: getMenuImageSrc,
+    getMenuImageStyle: getMenuImageStyle,
     openCropPicker: openCropPicker,
     rootPath: rootPath,
     getCart: getCart,

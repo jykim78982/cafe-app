@@ -57,7 +57,7 @@
 
     listEl.innerHTML = menus.map(function (m) {
       var image = m.image
-        ? '<img src="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(m.image)) + '" alt="' + CafeUtils.escapeHtml(m.name) + '" style="object-position:' + CafeUtils.escapeHtml(m.imagePosition || "50% 50%") + '">'
+        ? '<img src="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageSrc(m.image)) + '" alt="' + CafeUtils.escapeHtml(m.name) + '" style="' + CafeUtils.escapeHtml(CafeUtils.getMenuImageStyle(m.imagePosition, m.imageZoom)) + '">'
         : "";
 
       var badge = m.soldOut ? '<span class="badge">품절</span>' : "";
