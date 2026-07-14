@@ -377,6 +377,75 @@
   display: none;
 }
 
+.card-approval {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.card-approval[hidden] {
+  display: none;
+}
+
+.card-approval-desc {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.card-field {
+  display: grid;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.card-field input {
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.86);
+  padding: 0 12px;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.card-field input:focus-visible {
+  outline: 2px solid rgba(217, 140, 74, 0.45);
+  outline-offset: 2px;
+}
+
+.card-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.card-approval-error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.card-approval-error[hidden] {
+  display: none;
+}
+
+.card-approval-amount {
+  font-size: 1.3rem;
+  font-weight: 900;
+  text-align: center;
+}
+
 .naver-approval {
   display: grid;
   gap: 10px;
