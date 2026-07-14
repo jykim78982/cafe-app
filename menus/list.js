@@ -6,64 +6,42 @@
   var VIEW_KEY = "cafeapp_menu_view";
 
   var state = {
-    search: "",
     category: "전체",
-    sort: "recommended",
     view: localStorage.getItem(VIEW_KEY) === "list" ? "list" : "grid"
   };
 
   var cachedMenus = [];
 
-  var searchInput = document.getElementById("searchInput");
-  var categoryFilter = document.getElementById("categoryFilter");
-  var sortSelect = document.getElementById("sortSelect");
+  var tabsEl = document.getElementById("tabs");
   var gridViewBtn = document.getElementById("gridViewBtn");
   var listViewBtn = document.getElementById("listViewBtn");
   var menuGrid = document.getElementById("menuGrid");
   var emptyState = document.getElementById("emptyState");
-  var resultCount = document.getElementById("resultCount");
   var cartCount = document.getElementById("cartCount");
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
   }
 
-  function renderCategoryOptions() {
-    categoryFilter.innerHTML = CafeData.getCategories().map(function (category) {
-      return "<option value=\"" + CafeUtils.escapeHtml(category) + "\">" +
-        CafeUtils.escapeHtml(category) +
-        "</option>";
+  function renderTabs() {
+    var categories = CafeData.getCategories();
+    tabsEl.innerHTML = categories.map(function (category) {
+      return "<button type=\"button\" class=\"tab" + (category === state.category ? " is-active" : "") + "\" data-category=\"" + CafeUtils.escapeHtml(category) + "\">" + CafeUtils.escapeHtml(category) + "</button>";
     }).join("");
+
+    tabsEl.querySelectorAll(".tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        state.category = tab.dataset.category;
+        renderTabs();
+        render();
+      });
+    });
   }
 
   function getFilteredMenus() {
-    var keyword = state.search.trim().toLowerCase();
-
-    return cachedMenus
-      .filter(function (menu) {
-        return state.category === "전체" || menu.category === state.category;
-      })
-      .filter(function (menu) {
-        if (!keyword) return true;
-
-        return menu.name.toLowerCase().indexOf(keyword) !== -1 ||
-          menu.description.toLowerCase().indexOf(keyword) !== -1;
-      })
-      .sort(function (a, b) {
-        if (state.sort === "name") {
-          return a.name.localeCompare(b.name, "ko-KR");
-        }
-
-        if (state.sort === "priceAsc") {
-          return Number(a.price) - Number(b.price);
-        }
-
-        if (state.sort === "priceDesc") {
-          return Number(b.price) - Number(a.price);
-        }
-
-        return Number(a.soldOut) - Number(b.soldOut);
-      });
+    return state.category === "전체"
+      ? cachedMenus
+      : cachedMenus.filter(function (menu) { return menu.category === state.category; });
   }
 
   function createImageMarkup(menu) {
@@ -109,29 +87,13 @@
     var menus = getFilteredMenus();
     menuGrid.innerHTML = menus.map(renderMenuCard).join("");
     emptyState.hidden = menus.length > 0;
-    resultCount.textContent = menus.length + "개 표시 중";
     applyView();
   }
-
-  searchInput.addEventListener("input", function (event) {
-    state.search = event.target.value;
-    render();
-  });
-
-  categoryFilter.addEventListener("change", function (event) {
-    state.category = event.target.value;
-    render();
-  });
-
-  sortSelect.addEventListener("change", function (event) {
-    state.sort = event.target.value;
-    render();
-  });
 
   gridViewBtn.addEventListener("click", function () { setView("grid"); });
   listViewBtn.addEventListener("click", function () { setView("list"); });
 
-  renderCategoryOptions();
+  renderTabs();
   updateCartCount();
   cachedMenus = await CafeData.getMenus();
   render();

@@ -261,7 +261,7 @@
 
 @media (max-width: 760px) {
   .admin-header-inner {
-    align-items: stretch;
+    align-items: center;
     display: flex;
     flex-direction: column;
     padding: var(--spacing) 16px;

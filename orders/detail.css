@@ -282,11 +282,17 @@ h1 {
   .detail-top,
   .panel-heading,
   .detail-actions {
-    align-items: stretch;
     flex-direction: column;
   }
 
+  .detail-top,
+  .panel-heading,
+  .detail-actions {
+    align-items: stretch;
+  }
+
   .header-inner {
+    align-items: center;
     gap: 8px;
     padding: 12px 0;
     min-height: 0;
