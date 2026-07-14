@@ -25,6 +25,15 @@
   var naverApprovalAmount = document.getElementById("naverApprovalAmount");
   var naverApproveBtn = document.getElementById("naverApproveBtn");
   var naverApprovalCancel = document.getElementById("naverApprovalCancel");
+  var kakaoApproval = document.getElementById("kakaoApproval");
+  var kakaoApprovalAmount = document.getElementById("kakaoApprovalAmount");
+  var kakaoApproveBtn = document.getElementById("kakaoApproveBtn");
+  var kakaoApprovalCancel = document.getElementById("kakaoApprovalCancel");
+
+  var mockApprovals = {
+    "네이버페이": { panel: naverApproval, amount: naverApprovalAmount, processingText: "네이버페이로 결제를 처리하고 있습니다..." },
+    "카카오페이": { panel: kakaoApproval, amount: kakaoApprovalAmount, processingText: "카카오페이로 결제를 처리하고 있습니다..." }
+  };
 
   function updateCartCount() {
     cartCount.textContent = CafeUtils.getCartCount();
@@ -117,6 +126,7 @@
     paymentAmount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
     paymentActions.hidden = false;
     naverApproval.hidden = true;
+    kakaoApproval.hidden = true;
     paymentProcessing.hidden = true;
     paymentOverlay.hidden = false;
   }
@@ -152,11 +162,12 @@
     if (cart.length === 0) return;
 
     var method = getSelectedPaymentMethod();
+    var approval = mockApprovals[method];
 
-    if (method === "네이버페이") {
-      naverApprovalAmount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
+    if (approval) {
+      approval.amount.textContent = CafeUtils.formatPrice(CafeUtils.getCartTotal());
       paymentActions.hidden = true;
-      naverApproval.hidden = false;
+      approval.panel.hidden = false;
       return;
     }
 
@@ -173,9 +184,21 @@
 
   naverApproveBtn.addEventListener("click", function () {
     naverApproval.hidden = true;
-    paymentProcessingText.textContent = "네이버페이로 결제를 처리하고 있습니다...";
+    paymentProcessingText.textContent = mockApprovals["네이버페이"].processingText;
     paymentProcessing.hidden = false;
     finishOrder("네이버페이");
+  });
+
+  kakaoApprovalCancel.addEventListener("click", function () {
+    kakaoApproval.hidden = true;
+    paymentActions.hidden = false;
+  });
+
+  kakaoApproveBtn.addEventListener("click", function () {
+    kakaoApproval.hidden = true;
+    paymentProcessingText.textContent = mockApprovals["카카오페이"].processingText;
+    paymentProcessing.hidden = false;
+    finishOrder("카카오페이");
   });
 
   checkoutButton.addEventListener("click", openPaymentModal);
