@@ -144,6 +144,7 @@
       id: row.id,
       orderNo: row.order_no,
       userId: row.user_id,
+      customerName: row.customer_name,
       status: row.status,
       paymentMethod: row.payment_method,
       total: row.total,
@@ -228,6 +229,7 @@
       if (session) {
         var payload = {
           user_id: session.user.id,
+          customer_name: (session.user.user_metadata && session.user.user_metadata.name) || "회원",
           status: "pending",
           payment_method: order.paymentMethod,
           total: order.total,

@@ -131,18 +131,19 @@ a:focus-visible {
 
 .table-row {
   display: grid;
-  grid-template-columns: minmax(150px, 1.1fr) minmax(120px, 0.9fr) 120px 120px minmax(150px, 1fr);
+  grid-template-columns: minmax(150px, 1.1fr) minmax(120px, 0.9fr) 120px 120px minmax(150px, 1fr) minmax(180px, auto);
   gap: var(--spacing);
   align-items: center;
   border-bottom: 1px solid var(--color-border);
   border-left: 2px solid transparent;
   color: inherit;
+  cursor: pointer;
   min-height: 68px;
   padding: var(--spacing) 20px;
   transition: background 0.15s ease, border-left-color 0.15s ease;
 }
 
-a.table-row:hover {
+.table-row:not(.table-head):hover {
   background: rgba(26, 26, 24, 0.045);
   border-left-color: var(--color-accent);
 }
@@ -150,6 +151,7 @@ a.table-row:hover {
 .table-head {
   background: rgba(26, 26, 24, 0.03);
   color: var(--color-text-muted);
+  cursor: default;
   font-size: 0.86rem;
   font-weight: 900;
 }
@@ -165,15 +167,34 @@ a.table-row:hover {
   font-weight: 700;
 }
 
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.actions-cell .status-select {
+  width: auto;
+  min-height: 34px;
+  padding: 0 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.actions-cell .btn {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+
 .status-chip {
   width: fit-content;
   border-radius: 4px;
   background: var(--color-primary);
   color: #fff;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  padding: 4px 9px;
+  padding: 5px 11px;
   white-space: nowrap;
 }
 

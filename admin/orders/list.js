@@ -13,6 +13,15 @@
     cancelled: "취소"
   };
 
+  var STATUS_COLORS = {
+    pending: "#1a1a18",
+    confirmed: "#1a1a18",
+    preparing: "#2f9e44",
+    ready: "#2f9e44",
+    completed: "#8a8a86",
+    cancelled: "#c0392b"
+  };
+
   var state = {
     search: "",
     status: "all",
@@ -49,6 +58,10 @@
     return "status-" + CafeUtils.escapeHtml(status);
   }
 
+  function canCancel(order) {
+    return order.status !== "completed" && order.status !== "cancelled";
+  }
+
   function getFilteredOrders() {
     var keyword = state.search.trim().toLowerCase();
 
@@ -74,17 +87,36 @@
       });
   }
 
+  function renderStatusOptions(current) {
+    return Object.keys(STATUS_LABELS).filter(function (value) {
+      return value !== "cancelled";
+    }).map(function (value) {
+      return "<option value=\"" + value + "\"" +
+        " style=\"background-color:" + STATUS_COLORS[value] + ";color:#fff;text-align:left;\"" +
+        (value === current ? " selected" : "") + ">" +
+        CafeUtils.escapeHtml(STATUS_LABELS[value]) + "</option>";
+    }).join("");
+  }
+
   function renderOrder(order) {
     return "" +
-      "<a class=\"table-row\" role=\"row\" href=\"detail?id=" + encodeURIComponent(order.id) + "\">" +
+      "<div class=\"table-row\" role=\"row\" data-id=\"" + CafeUtils.escapeHtml(order.id) + "\">" +
         "<span class=\"order-id\" role=\"cell\">" + CafeUtils.escapeHtml(order.orderNo) + "</span>" +
-        "<span class=\"customer\" role=\"cell\">방문 고객</span>" +
+        "<span class=\"customer\" role=\"cell\">" + CafeUtils.escapeHtml(order.customerName || "방문 고객") + "</span>" +
         "<span class=\"status-chip " + getStatusClass(order.status) + "\" role=\"cell\">" +
           CafeUtils.escapeHtml(getStatusLabel(order.status)) +
         "</span>" +
         "<span class=\"order-total\" role=\"cell\">" + CafeUtils.formatPrice(order.total) + "</span>" +
         "<span class=\"order-date\" role=\"cell\">" + CafeUtils.escapeHtml(formatDate(order.createdAt)) + "</span>" +
-      "</a>";
+        "<span class=\"actions-cell\" role=\"cell\">" +
+          "<select class=\"status-select\" data-id=\"" + CafeUtils.escapeHtml(order.id) + "\"" +
+            (order.status === "cancelled" ? " disabled" : "") + ">" +
+            renderStatusOptions(order.status) +
+          "</select>" +
+          "<button type=\"button\" class=\"btn btn-danger cancel-btn\" data-id=\"" + CafeUtils.escapeHtml(order.id) + "\"" +
+            (canCancel(order) ? "" : " disabled") + ">취소</button>" +
+        "</span>" +
+      "</div>";
   }
 
   function render() {
@@ -94,6 +126,40 @@
     emptyState.hidden = orders.length > 0;
     resultCount.textContent = orders.length + "건 표시";
   }
+
+  async function applyStatusChange(id, status) {
+    var updated = await CafeData.updateOrderStatus(id, status);
+    if (updated) {
+      var order = cachedOrders.find(function (o) { return o.id === id; });
+      if (order) {
+        order.status = updated.status;
+        order.updatedAt = updated.updatedAt;
+      }
+    }
+    render();
+  }
+
+  ordersList.addEventListener("click", function (event) {
+    var cancelBtn = event.target.closest(".cancel-btn");
+    if (cancelBtn) {
+      if (cancelBtn.disabled) return;
+      if (confirm("이 주문을 취소할까요?")) {
+        applyStatusChange(cancelBtn.dataset.id, "cancelled");
+      }
+      return;
+    }
+
+    if (event.target.closest("select, button")) return;
+    var row = event.target.closest("[data-id]");
+    if (!row) return;
+    location.href = "detail?id=" + encodeURIComponent(row.dataset.id);
+  });
+
+  ordersList.addEventListener("change", function (event) {
+    var select = event.target.closest(".status-select");
+    if (!select) return;
+    applyStatusChange(select.dataset.id, select.value);
+  });
 
   searchInput.addEventListener("input", function (event) {
     state.search = event.target.value;
