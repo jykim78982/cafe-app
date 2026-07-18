@@ -9,6 +9,20 @@
     return CATEGORIES.slice();
   }
 
+  /* crypto.randomUUID()는 HTTPS/localhost 같은 보안 컨텍스트에서만 제공되므로,
+     HTTP로 접속하는 외부 서버 환경을 위해 대체 구현을 둡니다. */
+  function generateUUID() {
+    if (global.crypto && typeof global.crypto.randomUUID === "function") {
+      return global.crypto.randomUUID();
+    }
+
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0;
+      var v = c === "x" ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   /* ===== 메뉴 ===== */
   function normalizeMenu(row) {
     if (!row) return null;
@@ -243,7 +257,7 @@
 
       /* 게스트 주문은 anon role에 orders SELECT 권한이 없어 insert().select()로 결과를 되받을 수 없으므로
          id를 미리 생성해 넘기고, 응답 대신 넘긴 값으로 직접 결과를 구성합니다. */
-      var id = crypto.randomUUID();
+      var id = generateUUID();
       var createdAt = new Date().toISOString();
       var guestPayload = {
         id: id,
