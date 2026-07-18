@@ -153,15 +153,22 @@
     var cart = CafeUtils.getCart();
 
     setTimeout(async function () {
-      var order = await CafeData.createOrder({
-        total: CafeUtils.getCartTotal(),
-        paymentMethod: paymentMethod,
-        items: cart.map(function (item) {
-          return { name: item.name, price: item.price, qty: item.qty };
-        })
-      });
-      CafeUtils.clearCart();
-      window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
+      try {
+        var order = await CafeData.createOrder({
+          total: CafeUtils.getCartTotal(),
+          paymentMethod: paymentMethod,
+          items: cart.map(function (item) {
+            return { name: item.name, price: item.price, qty: item.qty };
+          })
+        });
+        CafeUtils.clearCart();
+        window.location.href = "../orders/detail?id=" + encodeURIComponent(order.id);
+      } catch (error) {
+        console.error(error);
+        paymentProcessing.hidden = true;
+        paymentActions.hidden = false;
+        showToast("결제 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+      }
     }, 900);
   }
 
